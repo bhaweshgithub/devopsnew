@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Starting up codebuild
+      - apt update && apt install -y jq 
+  build:
+    commands:
+      - echo Starting build
+      - ls -ltR ${CODEBUILD_SRC_DIR}
+      - . assembly/build/.env.build
+      - python3 assembly/build/assembler.py
+      - cd ${CODEBUILD_SRC_DIR}/src
+      - sed "s/###terraformbucket###/${terraformbucket}/g" terraform/provider.tpl > terraform/provider.tf
+      - aws s3 cp --recursive ${branchname} s3://${bucketname}/${branchname}
+      - aws s3 cp --recursive terraform/ s3://${terraformbucket}/terraform_templates/${terraformversion}
+      - echo "Deploying template with cloudformation for provision parts (lambda,etc)"
+      - aws cloudformation create-stack --stack-name provision-${branchname} --template-url https://s3.eu-central-1.amazonaws.com/${bucketname}/${branchname}/cftemplate-${branchname}.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=branchname,ParameterValue=${branchname}
+      - echo "Waiting for finish"
+      - aws cloudformation wait stack-create-complete --stack-name provision-${branchname}
+      - echo "Deploying cloudformation stackset"
+      - echo "Going back to pipeline -> provision running on test account (attached to this account)"
+      
+      

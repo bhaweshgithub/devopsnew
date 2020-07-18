@@ -1,0 +1,41 @@
+$ aws codebuild batch-get-projects --names DevelopCPTestBuild
+{
+    "projects": [
+        {
+            "name": "DevelopCPTestBuild",
+            "arn": "arn:aws:codebuild:eu-central-1:297193019640:project/DevelopCPTestBuild",
+            "source": {
+                "type": "CODEPIPELINE",
+                "buildspec": "assembly/test/action-build/buildspec.yml",
+                "insecureSsl": false
+            },
+            "artifacts": {
+                "type": "CODEPIPELINE",
+                "namespaceType": "NONE",
+                "name": "DevelopCPTestBuild",
+                "packaging": "NONE",
+                "encryptionDisabled": false
+            },
+            "cache": {
+                "type": "NO_CACHE"
+            },
+            "environment": {
+                "type": "LINUX_CONTAINER",
+                "image": "aws/codebuild/python:3.6.5",
+                "computeType": "BUILD_GENERAL1_SMALL",
+                "environmentVariables": [],
+                "privilegedMode": false
+            },
+            "serviceRole": "arn:aws:iam::297193019640:role/service-role/codebuild-DevelopCPTestBuild-service-role",
+            "timeoutInMinutes": 60,
+            "encryptionKey": "arn:aws:kms:eu-central-1:297193019640:alias/aws/s3",
+            "tags": [],
+            "created": 1538314289.65,
+            "lastModified": 1538314382.686,
+            "badge": {
+                "badgeEnabled": false
+            }
+        }
+    ],
+    "projectsNotFound": []
+}

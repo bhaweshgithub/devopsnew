@@ -1,0 +1,35 @@
+{
+	"Roles":
+	[
+	{
+		"rolename": "LambdaExecutioner",
+		"source": "lambdaexecutionrole/lambdaexecutionerrole.json",
+		"policies" : [ "AdministratorAccess","lambdaexecute" ],
+		"service" : "lambda"
+	},
+	{
+		"rolename": "StatesExecutionRole-eu-central-1",
+		"source": "lambdaexecutionrole/lambdaexecutionerrole.json",
+		"policies" : [ "AdministratorAccess","lambdaexecute" ],
+		"service" : "states"
+	},
+	{
+		"rolename": "TSI_Base_Lambda_Oss_Provision_Role",
+		"source": "lambdaexecutionrole/lambdaexecutionerrole.json",
+		"policies" : [ "TSI_Base_Lambda_Oss_Provision_policy","TSI_Base_Provision_SendEmail","TSI_Base_Provision_Bucket" ],
+		"service" : "lambda"
+	},
+	{
+		"rolename": "accountReadRole",
+		"source": "lambdaexecutionrole/lambdaexecutionerrole.json",
+		"policies" : [ "lambdaexecute","AccountReadPolicy" ],
+		"service" : "lambda"
+	},
+	{
+		"rolename": "provisioniamrole",
+		"source": "lambdaexecutionrole/lambdaexecutionerrole.json",
+		"policies" : [ "lambdaexecute","AWSLambdaCloudFormationExecutionRole" ,"TSI_Base_Provision_SendEmail", "TSI_ProvisionAssumeRole", "TSI_Base_Provision_Bucket","AWSStepFunctionsFullAccess","DynamoDBStreamRead","DynamoDBAccounts","AmazonGuardDutyFullAccess","AccountReadPolicy"],
+		"service" : "lambda"
+	}
+	]
+}

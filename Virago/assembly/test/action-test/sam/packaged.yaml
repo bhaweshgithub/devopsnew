@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "virago codepipeline -> test stage -> deploy-test job\nSAM Template for\
+  \ Virago Test Stage \n"
+Globals:
+  Function:
+    Timeout: 30
+Outputs:
+  developCodepipelineTestStageDeploytests:
+    Description: deploy test Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - teststagedeployjob
+      - Arn
+  developCodepipelineTestStageDeploytestsIamRole:
+    Description: Implicit IAM Role created develop-codepipeline-teststage-deploytests
+      function
+    Value:
+      Fn::GetAtt:
+      - teststagedeployjobRole
+      - Arn
+Resources:
+  teststagedeployjob:
+    Properties:
+      CodeUri: s3://297193019640-sambucket/4610a1c93ded49ef20ff6ccf85fd7b4b
+      Environment:
+        Variables:
+          debugging: 1
+      FunctionName: develop-codepipeline-teststage-deploytests
+      Handler: teststage-deploytests.lambda_handler
+      Runtime: python3.6
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

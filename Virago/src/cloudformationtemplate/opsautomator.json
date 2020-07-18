@@ -1,0 +1,1200 @@
+{
+   "AWSTemplateFormatVersion": "2010-09-09", 
+   "Description": "Cross account role for selected automation actions for Ops Automator stack \"TSI-OpsAutomator\" in account 596722051988", 
+   "Parameters": {
+   "SharedServicesAccountID": 
+		{
+			"Type": "String",
+			"Default": "596722051988",
+			"Description": "Value for Shared Services account"
+		}
+   },
+   "Resources": {
+      "Ec2StopInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2StopInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:DescribeTags", 
+                        "ec2:StopInstances", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "RdsCreateInstanceSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsCreateInstanceSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDbInstances", 
+                        "rds:DescribeDBSnapshots", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:ModifyDBSnapshotAttribute", 
+                        "rds:CreateDBSnapshot"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "RdsDeleteInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsDeleteInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:StartDBInstance", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:StopDBInstance", 
+                        "rds:DescribeDBInstances", 
+                        "rds:DescribeDBSnapshots", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DeleteDBInstance", 
+                        "rds:DescribeDbInstances", 
+                        "rds:ModifyDBSnapshotAttribute"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsRebootInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsRebootInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:RebootDBInstance", 
+                        "rds:DescribeDBInstances", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DescribeDbInstances"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2SetTagsPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2SetTags", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "ec2:DescribeSnapshots", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:DescribeImages", 
+                        "ec2:DescribeVolumes", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "CloudformationUpdateStackPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_CloudformationUpdateStack", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "cloudformation:GetTemplateSummary", 
+                        "iam:PassRole", 
+                        "cloudformation:DescribeStackEvents", 
+                        "cloudformation:SetStackPolicy", 
+                        "cloudformation:DescribeStacks", 
+                        "cloudformation:UpdateStack"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2DeleteSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2DeleteSnapshot", 
+                        "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeSnapshots"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  },
+				  {
+                     "Condition": {
+			            "StringLike": {
+                           "ec2:ResourceTag/keepSnapshots": "*"
+                        }
+                     },
+                     "Action": [
+                        "ec2:DeleteSnapshot"
+                     ],
+                     "Resource": "*",
+                     "Effect": "Allow"
+                  }
+               ]
+            },   
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "Ec2RemoveSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2RemoveSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DeleteSnapshot", 
+                        "ec2:DescribeSnapshots"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsUnderUtilizedInstancesPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsUnderUtilizedInstances", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDbInstances", 
+                        "rds:RemoveTagsFromResource", 
+                        "cloudwatch:GetMetricData"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "DynamodbCreateBackupPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_DynamodbCreateBackup", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "dynamodb:DescribeBackup", 
+                        "dynamodb:UntagResource", 
+                        "dynamodb:CreateBackup", 
+                        "dynamodb:ListTables", 
+                        "dynamodb:ListTagsOfResource", 
+                        "dynamodb:TagResource"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2RebootInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2RebootInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:RebootInstances", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:DescribeTags", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsStartInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsStartInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                       "Condition": {
+                           "StringLike": {
+                               "rds:snapshot-tag/keepRDSSnapshots": "*"
+                           }
+                       },
+                       "Action": "rds:DeleteDBSnapshot",
+                       "Resource": "*",
+                       "Effect": "Allow"
+                   },
+                   {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:StartDBInstance", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDBInstances", 
+                        "rds:DescribeDBSnapshots", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DescribeDbInstances"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "OpsAutomatorActionsRole": {
+         "Type": "AWS::IAM::Role", 
+         "Properties": {
+            "RoleName": "TSI_OpsAutomatorActionsRole", 
+            "AssumeRolePolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": "sts:AssumeRole", 
+                     "Effect": "Allow", 
+                     "Principal": {
+                        "AWS": 
+                        {
+									"Fn::Sub": 
+									[
+										"arn:aws:iam::${sharedservicesaccountid}:root",
+										{
+											"sharedservicesaccountid": 
+											{
+												"Ref": "SharedServicesAccountID"
+											}
+										}
+									]
+								}
+                     }
+                  }
+               ]
+            }, 
+            "Path": "/"
+         }
+      }, 
+      "StoragegatewayCreateVolumeSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_StoragegatewayCreateVolumeSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "storagegateway:ListVolumes", 
+                        "storagegateway:ListTagsForResource", 
+                        "ec2:CreateTags", 
+                        "ec2:DescribeSnapshots", 
+                        "storagegateway:AddTagsToResource", 
+                        "storagegateway:RemoveTagsFromResource", 
+                        "ec2:ModifySnapshotAttribute", 
+                        "storagegateway:CreateSnapshot", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsCopyInstanceSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsCopyInstanceSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "kms:DescribeKey", 
+                        "rds:DescribeDBSnapshots", 
+                        "rds:CopyDBSnapshot", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DescribeDbSnapshots", 
+                        "rds:ModifyDBsnapshotAttribute"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "RdsDeleteClusterPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsDeleteCluster", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:DescribeDBClusterSnapshots", 
+                        "rds:ListTagsForResource", 
+                        "rds:DescribeDBClusters", 
+                        "rds:StopDBCluster", 
+                        "rds:DeleteDBCluster", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDBInstances", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DescribeDbClusters", 
+                        "rds:DeleteDBInstance", 
+                        "rds:ModifyDBClusterSnapshotAttribute", 
+                        "rds:StartDBCluster"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "SsmRunCommandPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_SsmRunCommand", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ssm:SendCommand", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ssm:GetCommandInvocation", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2CheckTagsPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2CheckTags", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeSnapshots", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:DescribeImages", 
+                        "ec2:StopInstances", 
+                        "ec2:DescribeVolumes", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsStopInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsStopInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:StopDBInstance", 
+                        "rds:DescribeDBInstances", 
+                        "rds:DescribeDBSnapshots", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DescribeDbInstances", 
+                        "rds:ModifyDBsnapshotAttribute"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "Ec2CreateSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2CreateSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeSnapshots", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:CreateSnapshot", 
+                        "ec2:DescribeTags", 
+                        "ec2:ModifySnapshotAttribute", 
+                        "ec2:DescribeVolumes", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "RdsDeleteInstanceSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsDeleteInstanceSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+			       {
+                       "Condition": {
+                           "StringLike": {
+                               "rds:snapshot-tag/keepRDSSnapshots": "*"
+                           }
+                       },
+                       "Action": "rds:DeleteDBSnapshot",
+                       "Resource": "*",
+                       "Effect": "Allow"
+                   },
+                   {
+                       "Action": [
+                           "rds:DescribeDBSnapshots",
+						   "tag:GetResources",
+						   "rds:DescribeDbSnapshots",
+                           "rds:ListTagsForResource"
+                        ],
+                        "Resource": "*",
+						"Effect": "Allow"
+                    }
+                ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "RdsCreateClusterSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsCreateClusterSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "rds:CreateDBClusterSnapshot", 
+                        "tag:GetResources", 
+                        "rds:DescribeDBClusterSnapshots", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDbClusters", 
+                        "rds:DescribeDBInstances", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:ModifyDBClusterSnapshotAttribute"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RedshiftCreateSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RedshiftCreateSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "redshift:DescribeClusters", 
+                        "redshift:CreateClusterSnapshot", 
+                        "tag:GetResources", 
+                        "redshift:AuthorizeSnapshotAccess", 
+                        "redshift:DescribeTags", 
+                        "redshift:DeleteTags", 
+                        "redshift:DescribeClusterSnapshots", 
+                        "redshift:CreateTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsStartClusterPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsStartCluster", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:DescribeDBClusters", 
+                        "rds:StartDBCluster", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDBInstances", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DescribeDbClusters"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RedshiftDeleteSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RedshiftDeleteSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "redshift:DescribeTags", 
+                        "tag:GetResources", 
+                        "redshift:DescribeClusterSnapshots", 
+                        "redshift:RevokeSnapshotAccess", 
+                        "redshift:DeleteClusterSnapshot"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "CloudformationDeleteStackPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_CloudformationDeleteStack", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "iam:PassRole", 
+                        "cloudformation:DeleteStack", 
+                        "cloudformation:DescribeStacks"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2ReportVolumeSnapshotsPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2ReportVolumeSnapshots", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeVolumes", 
+                        "ec2:DescribeSnapshots"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2UnderUtilizedInstancesPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2UnderUtilizedInstances", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:DeleteTags", 
+                        "cloudwatch:GetMetricData", 
+                        "tag:GetResources"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2DeleteImagePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2DeleteImage", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DeregisterImage", 
+                        "ec2:DeleteSnapshot", 
+                        "ec2:DescribeImages", 
+                        "ec2:DescribeSnapshots"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2DisassociatedIpsPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2DisassociatedIps", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "ec2:DescribeAddresses", 
+                        "tag:GetResources", 
+                        "ec2:ReleaseAddress"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2ArchiveSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2ArchiveSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeSnapshotAttribute", 
+                        "ec2:DescribeSnapshots", 
+                        "ec2:CreateTags", 
+                        "ec2:DeleteSnapshot", 
+                        "ec2:ModifySnapshotAttribute", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "DynamodbSetCapacityPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_DynamodbSetCapacity", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "dynamodb:DescribeTable", 
+                        "dynamodb:UpdateTable"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsCopyClusterSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsCopyClusterSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:DescribeDBClusterSnapshots", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "kms:DescribeKey", 
+                        "rds:ModifyDBClusterSnapshotAttribute", 
+                        "rds:DescribeDbClusterSnapshots", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:CopyDBClusterSnapshot"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2UnderUtilizedVolumesPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2UnderUtilizedVolumes", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "ec2:CreateTags", 
+                        "ec2:DescribeVolumes", 
+                        "ec2:DeleteTags", 
+                        "cloudwatch:GetMetricData", 
+                        "tag:GetResources"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2StartInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2StartInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:ModifyInstanceAttribute", 
+                        "ec2:DescribeTags", 
+                        "ec2:DeleteTags", 
+                        "ec2:StartInstances"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "Ec2TerminateInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2TerminateInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:ModifyImageAttribute", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateImage", 
+                        "ec2:TerminateInstances", 
+                        "ec2:DescribeTags", 
+                        "ec2:DescribeImages", 
+                        "ec2:DeleteTags", 
+                        "ec2:CreateTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2CopySnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2CopySnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeSnapshots", 
+                        "ec2:CreateTags", 
+                        "ec2:DeleteSnapshot", 
+                        "ec2:ModifySnapshotAttribute", 
+                        "ec2:DeleteTags", 
+                        "ec2:CopySnapshot"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }, 
+            "Roles": [
+               {
+                  "Ref": "OpsAutomatorActionsRole"
+               }
+            ]
+         }
+      }, 
+      "RdsStopClusterPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsStopCluster", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:DescribeDBClusters", 
+                        "rds:StopDBCluster", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDBInstances", 
+                        "rds:RemoveTagsFromResource", 
+                        "rds:DescribeDbClusters"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsDeleteClusterSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsDeleteClusterSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:DescribeDBClusterSnapshots", 
+                        "rds:ListTagsForResource", 
+                        "rds:DescribeDbClusterSnapshots", 
+                        "rds:DeleteDBClusterSnapshot"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2CreateImagePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2CreateImage", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:ModifyImageAttribute", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateImage", 
+                        "ec2:DescribeTags", 
+                        "ec2:DescribeImages", 
+                        "ec2:DeleteTags", 
+                        "ec2:CreateTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2ResizeInstancePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2ResizeInstance", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeInstances", 
+                        "ec2:CreateTags", 
+                        "ec2:ModifyInstanceAttribute", 
+                        "ec2:DescribeTags", 
+                        "ec2:StopInstances", 
+                        "ec2:DeleteTags", 
+                        "ec2:StartInstances"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "CloudformationCreateStackPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_CloudformationCreateStack", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "iam:PassRole", 
+                        "cloudformation:DescribeStackEvents", 
+                        "cloudformation:CreateStack", 
+                        "cloudformation:DescribeStacks"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "DynamodbDeleteBackupPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_DynamodbDeleteBackup", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "dynamodb:ListTagsOfResource", 
+                        "dynamodb:ListBackups", 
+                        "dynamodb:DeleteBackup", 
+                        "dynamodb:ListTables"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2CopyImagePolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2CopyImage", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:ModifyImageAttribute", 
+                        "ec2:CreateTags", 
+                        "ec2:CopyImage", 
+                        "ec2:DescribeImages", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "RdsSetTagsPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_RdsSetTags", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "rds:ListTagsForResource", 
+                        "rds:AddTagsToResource", 
+                        "rds:DescribeDBInstances", 
+                        "rds:DescribeDBSnapshots", 
+                        "rds:RemoveTagsFromResource", 
+                        "ec2:DescribeTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }, 
+      "Ec2CreateVolumeSnapshotPolicy": {
+         "Type": "AWS::IAM::ManagedPolicy", 
+         "Properties": {
+            "ManagedPolicyName": "TSI_Ec2CreateVolumeSnapshot", 
+            "PolicyDocument": {
+               "Version": "2012-10-17", 
+               "Statement": [
+                  {
+                     "Action": [
+                        "tag:GetResources", 
+                        "ec2:DescribeSnapshots", 
+                        "ec2:CreateTags", 
+                        "ec2:CreateSnapshot", 
+                        "ec2:ModifySnapshotAttribute", 
+                        "ec2:DescribeVolumes", 
+                        "ec2:DeleteTags"
+                     ], 
+                     "Resource": "*", 
+                     "Effect": "Allow"
+                  }
+               ]
+            }
+         }
+      }
+   }, 
+   "Outputs": {
+      "CrossAccountRoleArn": {
+         "Description": "Cross account role for automation actions", 
+         "Value": {
+            "Fn::GetAtt": [
+               "OpsAutomatorActionsRole", 
+               "Arn"
+            ]
+         }
+      }
+   }
+}

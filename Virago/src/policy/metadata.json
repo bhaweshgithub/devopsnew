@@ -1,0 +1,75 @@
+{
+	"Policies": 
+	[
+		{
+			"Type": "Managed",
+			"arn": "arn:aws:iam::aws:policy/AdministratorAccess",
+			"PolicyName" : "AdministratorAccess"
+		},
+		{
+			"Type": "Managed",
+			"arn": "arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess",
+			"PolicyName" : "AWSStepFunctionsFullAccess"
+		},
+		{
+			"Type": "Managed",
+			"arn": "arn:aws:iam::aws:policy/AmazonGuardDutyFullAccess",
+			"PolicyName" : "AmazonGuardDutyFullAccess"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "lambdaexecute",
+			"source": "lambdaexecutionerrole.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "TSI_Base_Lambda_Oss_Provision_policy",
+			"source": "TSI_Base_Lambda_Oss_Provision_policy.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "TSI_Base_Provision_Bucket",
+			"source": "TSI_Base_Provision_Bucket.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "TSI_Base_Provision_SendEmail",
+			"source": "TSI_Base_Provision_SendEmail.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "AccountReadPolicy",
+			"source": "AccountReadPolicy.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "AWSLambdaCloudFormationExecutionRole",
+			"source": "AWSLambdaCloudFormationExecutionRole.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "TSI_ProvisionAssumeRole",
+			"source": "TSI_ProvisionAssumeRole.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "DynamoDBStreamRead",
+			"source": "DyanamoDBStreamRead.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "DynamoDBAccounts",
+			"source": "DynamoDBAccounts.json"
+		},
+		{
+			"Type": "Custom",
+			"PolicyName": "lambdaAWSConfigPolicy",
+			"source": "lambdaAWSConfigPolicy.json"
+		},
+		{
+		    "Type": "Custom",
+			"PolicyName": "AWS2019_adjusted_to_Jira",
+			"source": "AWS2019_adjusted_to_Jira.json"
+		}
+	]
+}

@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    virago test policies
+
+    SAM Template for Virago Test Stage Policy Test
+
+Globals:
+    Function:
+        Timeout: 20
+
+# https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md
+Parameters:
+    Branch:
+        Type: String
+        Default: develop
+        Description: "The name of the git-branch the codepipeline runs for"
+
+
+Resources:
+
+    testpolicies:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub "codepipeline-${Branch}-teststage-test-policies"
+            CodeUri: ../build/
+            Handler: test-policies.lambda_handler
+            Runtime: python3.6
+            Environment: #
+                Variables:
+                    debugging: 0
+                    proxy: 0
+
+Outputs:
+    testpolicies:
+      Description: "testpolicies Lambda Function ARN"
+      Value: !GetAtt testpolicies.Arn

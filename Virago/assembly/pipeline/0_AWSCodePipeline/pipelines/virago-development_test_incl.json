@@ -1,0 +1,189 @@
+{
+    "pipeline": {
+        "name": "Virago-Development",
+        "roleArn": "arn:aws:iam::412318185247:role/PIPELINEDEV_eu-central-1_ServiceRoleForCodePipeline",
+        "artifactStore": {
+            "type": "S3",
+            "location": "412318185247-pipeline"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "S3",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "PollForSourceChanges": "false",
+                            "S3Bucket": "git-to-amazon-s3-development-outputbucket-3qyjyllzyalp",
+                            "S3ObjectKey": "virago/ViragoProject/virago_ViragoProject.zip"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "Codebuild",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "LambdaDeployer"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "viragobuildsourceoutput"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Test-Provisioning",
+                "actions": [
+                    {
+                        "name": "AcceptanceTest",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "FunctionName": "testProvision",
+                            "UserParameters": "{\"branchname\" : \"develop\" }"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+	    {
+                "name": "Test",
+                "actions": [
+                    {
+                        "name": "Test-Build",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "PolicyTestDeployer"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "TestAction",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "FunctionName": "codepipeline-develop-teststage-test",
+                            "UserParameters": "{\"branch\":\"develop\"}"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Test-Baseline",
+                "actions": [
+                    {
+                        "name": "AcceptanceTest",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "FunctionName": "deleteProvision",
+                            "UserParameters": "{\"branchname\" : \"develop\" }"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Production",
+                "actions": [
+                    {
+                        "name": "Approval",
+                        "actionTypeId": {
+                            "category": "Approval",
+                            "owner": "AWS",
+                            "provider": "Manual",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "CustomData": "The latest changes include feedback from Bob.",
+                            "ExternalEntityLink": "http://example.com"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    },
+                    {
+                        "name": "ProdBuild",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "ProjectName": "LambdaDeployer-PROD"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "version": 8
+    }
+}

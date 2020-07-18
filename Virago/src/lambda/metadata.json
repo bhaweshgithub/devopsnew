@@ -1,0 +1,198 @@
+{
+	"Lambdas": [
+		{
+			"rolename": "TSI_Base_Lambda_Oss_Provision_Role",
+			"source": "createAccountInOrganizations"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "getAccountStatus"
+		},
+		{
+			"rolename": "TSI_Base_Lambda_Oss_Provision_Role",
+			"source": "returnFailure"
+		},
+		{
+			"rolename": "TSI_Base_Lambda_Oss_Provision_Role",
+			"source": "deployProvision"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "provisionIamAdmin"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "addEventBusOnSecDevOps"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "addAccountCWDPCRule"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "addCloudTrailPolicy"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createPasswordPolicy"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createCloudFormationInstanceBaseline"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "getStackInstanceStateBaseline"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createGroup"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createRole"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createCloudFormationInstanceSecurityAlert"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "getStackInstanceStateSecurityAlert"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createAdminUser"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createEncryptionKeys"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "addS3RulesOnCustomerAccount"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "addAccountIDtojson"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "removeAccountCWDPCRule"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "removeCloudTrailPolicy"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "removeEventBusOnSecDevOps"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "createSSMRole"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "deleteDefaultVPC"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "checkRootMFA"
+		},
+		{
+			"rolename": "TSI_Base_Lambda_Oss_Provision_Role",
+			"source": "runCheckRootMFA"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "sendMFAcheckEmail"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "cfUpdatefromDynamodb"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "overrideStackSetParams"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "addAccountDynamoDB"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "sendMasterGuardDutyInvite"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "enableMemberGuardDuty"
+		},
+        {
+			"rolename": "provisioniamrole",
+			"source": "enableAWSConfig"
+            
+        },
+        {
+			"rolename": "provisioniamrole",
+			"source": "overrideSecurityStacksetParams"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "updateProvision"
+		},
+		{
+			"rolename":"provisioniamrole",
+			"source":"sendMailCloudChkrIntegration"
+		},
+		{
+			"rolename": "provisioniamrole",
+			"source": "addPacbotAccounttoScan"
+        },
+        {
+			"rolename": "provisioniamrole",
+			"source": "userGuide"
+        },
+        {
+			"rolename": "provisioniamrole",
+			"source": "createTSIAccess"
+            
+        },
+	    {
+			"rolename": "provisioniamrole",
+			"source": "getOrgUnitID" 
+            
+        },
+	    {
+			"rolename": "provisioniamrole",
+			"source": "moveAccountToOU"
+            
+        },
+	    {
+			"rolename": "provisioniamrole",
+			"source": "createAccountSCP"
+            
+        },
+ 	{
+			"rolename": "provisioniamrole",
+			"source": "createTSIAccess"
+            
+        },
+	{
+			"rolename": "provisioniamrole",
+			"source": "getOrgUnitID" 
+            
+        },
+	{
+			"rolename": "provisioniamrole",
+			"source": "moveAccountToOU"
+            
+        },
+	{
+			"rolename": "provisioniamrole",
+			"source": "createAccountSCP"
+            
+        }
+
+	]
+}

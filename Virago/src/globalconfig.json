@@ -1,0 +1,10 @@
+{
+"masteraccount" : "123456789",
+"cloudtrailbucket" : "s3-cloudtrail",
+"devsecopsaccount" : "12345678",
+"billingaccount" : "12345678",
+"billingbucket": "s3-billing",
+"provisionbucketname" : "s3-provision",
+"branch" : "master"
+}
+

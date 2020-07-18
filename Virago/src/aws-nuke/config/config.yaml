@@ -1,0 +1,862 @@
+regions:
+- us-east-2
+- us-east-1
+- us-west-1
+- us-west-2
+- ap-south-1
+- ap-northeast-3
+- ap-northeast-2
+- ap-southeast-1
+- ap-southeast-2
+- ap-northeast-1
+- ca-central-1
+- cn-north-1
+- cn-northwest-1
+- eu-west-1
+- eu-west-2
+- eu-west-3
+- eu-north-1
+- sa-east-1
+- us-gov-east-1
+- us-gov-west-1
+- global
+
+account-blacklist:
+    - "144415869861" # production
+    - "213373018187" # MCB
+    - "140492085282" # DevSecOps
+    - "596722051988" # Billing
+    - "808065542248" # sandbox1
+
+resource-types:
+  excludes:
+   - IAMUser
+   - IAMGroup
+   - IAMGroupPolicy
+   - IAMGroupPolicyAttachment
+   - IAMInstanceProfile
+   - IAMInstanceProfileRole
+   - IAMLoginProfile
+   - IAMOpenIDConnectProvider
+   - IAMPolicy
+   - IAMRole
+   - IAMRolePolicy
+   - IAMRolePolicyAttachment
+   - IAMSAMLProvider
+   - IAMServerCertificate
+   - IAMUser
+   - IAMUserAccessKey
+   - IAMUserGroupAttachment
+   - IAMUserPolicy
+   - IAMUserPolicyAttachment
+
+accounts:
+  "ACCOUNT_NO": # nuke account
+      filters:
+          EC2CustomerGateway:
+            - property: "tag:nukeignore"
+              value : "true"
+          ACMCertificate:
+            - property: "tag:nukeignore"
+              value : "true"
+          ACMPCACertificateAuthority:
+            - property: "tag:nukeignore"
+              value : "true"
+          ACMPCACertificateAuthorityState:
+            - property: "tag:nukeignore"
+              value : "true"
+          APIGatewayAPIKey:
+            - property: "tag:nukeignore"
+              value : "true"
+          APIGatewayClientCertificate:
+            - property: "tag:nukeignore"
+              value : "true"
+          APIGatewayDomainName:
+            - property: "tag:nukeignore"
+              value : "true"
+          APIGatewayRestAPI:
+            - property: "tag:nukeignore"
+              value : "true"
+          APIGatewayUsagePlan:
+            - property: "tag:nukeignore"
+              value : "true"
+          APIGatewayVpcLink:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamDirectoryConfig:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamFleet:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamFleetState:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamImageBuilder:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamImageBuilderWaiter:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamImage:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamStackFleetAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          AppStreamStack:
+            - property: "tag:nukeignore"
+              value : "true"
+          AutoScalingGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          LaunchConfiguration:
+            - property: "tag:nukeignore"
+              value : "true"
+          LifecycleHook:
+            - property: "tag:nukeignore"
+              value : "true"
+          AutoScalingPlansScalingPlan:
+            - property: "tag:nukeignore"
+              value : "true"
+          BatchComputeEnvironment:
+            - property: "tag:nukeignore"
+              value : "true"
+          BatchComputeEnvironmentState:
+            - property: "tag:nukeignore"
+              value : "true"
+          BatchJobQueue:
+            - property: "tag:nukeignore"
+              value : "true"
+          BatchJobQueueState:
+            - property: "tag:nukeignore"
+              value : "true"
+          Cloud9Environment:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudDirectoryDirectory:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudDirectorySchema:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudFormationStack:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudFrontDistributionDeployment:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudFrontDistribution:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudHSMV2Cluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudHSMV2ClusterHSM:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudSearchDomain:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudTrailTrail:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudWatchAlarm:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudWatchDashboard:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudWatchEventsRule:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudWatchEventsTarget:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudWatchLogsDestination:
+            - property: "tag:nukeignore"
+              value : "true"
+          CloudWatchLogsLogGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          CodeBuildProject:
+            - property: "tag:nukeignore"
+              value : "true"
+          CodeCommitRepository:
+            - property: "tag:nukeignore"
+              value : "true"
+          CodeDeployApplication:
+            - property: "tag:nukeignore"
+              value : "true"
+          CodePipelinePipeline:
+            - property: "tag:nukeignore"
+              value : "true"
+          CodeStarProject:
+            - property: "tag:nukeignore"
+              value : "true"
+          CognitoIdentityPool:
+            - property: "tag:nukeignore"
+              value : "true"
+          CognitoUserPoolDomain:
+            - property: "tag:nukeignore"
+              value : "true"
+          CognitoUserPool:
+            - property: "tag:nukeignore"
+              value : "true"
+          ConfigServiceConfigRule:
+            - property: "tag:nukeignore"
+              value : "true"
+          ConfigServiceConfigurationRecorder:
+            - property: "tag:nukeignore"
+              value : "true"
+          ConfigServiceDeliveryChannel:
+            - property: "tag:nukeignore"
+              value : "true"
+          DatabaseMigrationServiceCertificate:
+            - property: "tag:nukeignore"
+              value : "true"
+          DatabaseMigrationServiceEndpoint:
+            - property: "tag:nukeignore"
+              value : "true"
+          DatabaseMigrationServiceEventSubscription:
+            - property: "tag:nukeignore"
+              value : "true"
+          DatabaseMigrationServiceReplicationInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          DatabaseMigrationServiceReplicationTask:
+            - property: "tag:nukeignore"
+              value : "true"
+          DatabaseMigrationServiceSubnetGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          DataPipelinePipeline:
+            - property: "tag:nukeignore"
+              value : "true"
+          DAXCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          DAXParameterGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          DAXSubnetGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          DeviceFarmProject:
+            - property: "tag:nukeignore"
+              value : "true"
+          DirectoryServiceDirectory:
+            - property: "tag:nukeignore"
+              value : "true"
+          DynamoDBTableItem:
+            - property: "tag:nukeignore"
+              value : "true"
+          DynamoDBTable:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2DHCPOption:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2Address:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2Image:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2Instance:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2InternetGatewayAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2InternetGateway:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2KeyPair:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2NATGateway:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2NetworkACL:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2NetworkInterface:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2PlacementGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2RouteTable:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2SecurityGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2Snapshot:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2SpotFleetRequest:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2Subnet:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2Volume:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2VPCEndpoint:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2VPCEndpointServiceConfiguration:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2VPC:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2VPCPeeringConnection:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2VPNConnection:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2VPNGatewayAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          EC2VPNGateway:
+            - property: "tag:nukeignore"
+              value : "true"
+          ECRRepository:
+            - property: "tag:nukeignore"
+              value : "true"
+          ECSClusterInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          ECSCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          ECSService:
+            - property: "tag:nukeignore"
+              value : "true"
+          ECSTaskDefinition:
+            - property: "tag:nukeignore"
+              value : "true"
+          EFSFileSystem:
+            - property: "tag:nukeignore"
+              value : "true"
+          EFSMountTarget:
+            - property: "tag:nukeignore"
+              value : "true"
+          EKSCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          ElasticacheCacheCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          ElasticacheReplicationGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          ElasticacheSubnetGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          ElasticBeanstalkApplication:
+            - property: "tag:nukeignore"
+              value : "true"
+          ElasticBeanstalkEnvironment:
+            - property: "tag:nukeignore"
+              value : "true"
+          ESDomain:
+            - property: "tag:nukeignore"
+              value : "true"
+          ElasticTranscoderPipeline:
+            - property: "tag:nukeignore"
+              value : "true"
+          ELBLoadBalancer:
+            - property: "tag:nukeignore"
+              value : "true"
+          ELBv2LoadBalancer:
+            - property: "tag:nukeignore"
+              value : "true"
+          ELBv2TargetGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          EMRCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          EMRSecurityConfiguration:
+            - property: "tag:nukeignore"
+              value : "true"
+          FirehoseDeliveryStream:
+            - property: "tag:nukeignore"
+              value : "true"
+          FSxBackup:
+            - property: "tag:nukeignore"
+              value : "true"
+          FSxFileSystem:
+            - property: "tag:nukeignore"
+              value : "true"
+          GlueClassifier:
+            - property: "tag:nukeignore"
+              value : "true"
+          GlueConnection:
+            - property: "tag:nukeignore"
+              value : "true"
+          GlueCrawler:
+            - property: "tag:nukeignore"
+              value : "true"
+          GlueDatabase:
+            - property: "tag:nukeignore"
+              value : "true"
+          GlueDevEndpoint:
+            - property: "tag:nukeignore"
+              value : "true"
+          GlueJob:
+            - property: "tag:nukeignore"
+              value : "true"
+          GlueTrigger:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMGroupPolicy:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMGroupPolicyAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMInstanceProfileRole:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMInstanceProfile:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMUserGroupAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMLoginProfile:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMOpenIDConnectProvider:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMPolicy:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMRolePolicyAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMRolePolicy:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMRole:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMSAMLProvider:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMServerCertificate:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMServiceSpecificCredential:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMUserAccessKey:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMUserPolicyAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMUserPolicy:
+            - property: "tag:nukeignore"
+              value : "true"
+          IAMUser:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTAuthorizer:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTCACertificate:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTCertificate:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTJob:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTOTAUpdate:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTPolicy:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTRoleAlias:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTStream:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTThingGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTThing:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTThingType:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTThingTypeState:
+            - property: "tag:nukeignore"
+              value : "true"
+          IoTTopicRule:
+            - property: "tag:nukeignore"
+              value : "true"
+          KinesisAnalyticsApplication:
+            - property: "tag:nukeignore"
+              value : "true"
+          KinesisStream:
+            - property: "tag:nukeignore"
+              value : "true"
+          KinesisVideoProject:
+            - property: "tag:nukeignore"
+              value : "true"
+          KMSAlias:
+            - property: "tag:nukeignore"
+              value : "true"
+          KMSKey:
+            - property: "tag:nukeignore"
+              value : "true"
+          LambdaEventSourceMapping:
+            - property: "tag:nukeignore"
+              value : "true"
+          LambdaFunction:
+            - property: "tag:nukeignore"
+              value : "true"
+          LightsailDisk:
+            - property: "tag:nukeignore"
+              value : "true"
+          LightsailDomain:
+            - property: "tag:nukeignore"
+              value : "true"
+          LightsailInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          LightsailKeyPair:
+            - property: "tag:nukeignore"
+              value : "true"
+          LightsailLoadBalancer:
+            - property: "tag:nukeignore"
+              value : "true"
+          LightsailStaticIP:
+            - property: "tag:nukeignore"
+              value : "true"
+          MachineLearningBranchPrediction:
+            - property: "tag:nukeignore"
+              value : "true"
+          MachineLearningDataSource:
+            - property: "tag:nukeignore"
+              value : "true"
+          MachineLearningEvaluation:
+            - property: "tag:nukeignore"
+              value : "true"
+          MachineLearningMLModel:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaConvertJobTemplate:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaConvertPreset:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaConvertQueue:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaLiveChannel:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaLiveInputSecurityGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaLiveInput:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaPackageChannel:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaPackageOriginEndpoint:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaStoreContainer:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaStoreDataItems:
+            - property: "tag:nukeignore"
+              value : "true"
+          MediaTailorConfiguration:
+            - property: "tag:nukeignore"
+              value : "true"
+          MobileProject:
+            - property: "tag:nukeignore"
+              value : "true"
+          MQBroker:
+            - property: "tag:nukeignore"
+              value : "true"
+          NeptuneCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          NeptuneInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          NetpuneSnapshot:
+            - property: "tag:nukeignore"
+              value : "true"
+          OpsWorksApp:
+            - property: "tag:nukeignore"
+              value : "true"
+          OpsWorksCMBackup:
+            - property: "tag:nukeignore"
+              value : "true"
+          OpsWorksCMServer:
+            - property: "tag:nukeignore"
+              value : "true"
+          OpsWorksCMServerState:
+            - property: "tag:nukeignore"
+              value : "true"
+          OpsWorksInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          OpsWorksLayer:
+            - property: "tag:nukeignore"
+              value : "true"
+          OpsWorksUserProfile:
+            - property: "tag:nukeignore"
+              value : "true"
+          RDSDBCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          RDSDBClusterParameterGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          RDSDBParameterGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          RDSInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          RDSSnapshot:
+            - property: "tag:nukeignore"
+              value : "true"
+          RDSDBSubnetGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          RedshiftCluster:
+            - property: "tag:nukeignore"
+              value : "true"
+          RedshiftParameterGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          RedshiftSnapshot:
+            - property: "tag:nukeignore"
+              value : "true"
+          RedshiftSubnetGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          RekognitionCollection:
+            - property: "tag:nukeignore"
+              value : "true"
+          ResourceGroupGroup:
+            - property: "tag:nukeignore"
+              value : "true"
+          Route53HostedZone:
+            - property: "tag:nukeignore"
+              value : "true"
+          Route53ResourceRecordSet:
+            - property: "tag:nukeignore"
+              value : "true"
+          S3Bucket:
+            - property: "tag:nukeignore"
+              value : "true"
+          S3MultipartUpload:
+            - property: "tag:nukeignore"
+              value : "true"
+          S3Object:
+            - property: "tag:nukeignore"
+              value : "true"
+          SageMakerEndpointConfig:
+            - property: "tag:nukeignore"
+              value : "true"
+          SageMakerEndpoint:
+            - property: "tag:nukeignore"
+              value : "true"
+          SageMakerModel:
+            - property: "tag:nukeignore"
+              value : "true"
+          SageMakerNotebookInstanceState:
+            - property: "tag:nukeignore"
+              value : "true"
+          SageMakerNotebookInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          SecretsManagerSecret:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogConstraintPortfolioAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogPrincipalPortfolioAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogPortfolioProductAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogPortfolio:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogPortfolioShareAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogTagOptionPortfolioAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogProduct:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogProvisionedProduct:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceCatalogTagOption:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceDiscoveryInstance:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceDiscoveryNamespace:
+            - property: "tag:nukeignore"
+              value : "true"
+          ServiceDiscoveryService:
+            - property: "tag:nukeignore"
+              value : "true"
+          SESConfigurationSet:
+            - property: "tag:nukeignore"
+              value : "true"
+          SESIdentity:
+            - property: "tag:nukeignore"
+              value : "true"
+          SESReceiptFilter:
+            - property: "tag:nukeignore"
+              value : "true"
+          SESReceiptRuleSet:
+            - property: "tag:nukeignore"
+              value : "true"
+          SESTemplate:
+            - property: "tag:nukeignore"
+              value : "true"
+          SFNStateMachine:
+            - property: "tag:nukeignore"
+              value : "true"
+          SimpleDBDomain:
+            - property: "tag:nukeignore"
+              value : "true"
+          SNSEndpoint:
+            - property: "tag:nukeignore"
+              value : "true"
+          SNSPlatformApplication:
+            - property: "tag:nukeignore"
+              value : "true"
+          SNSSubscription:
+            - property: "tag:nukeignore"
+              value : "true"
+          SNSTopic:
+            - property: "tag:nukeignore"
+              value : "true"
+          SQSQueue:
+            - property: "tag:nukeignore"
+              value : "true"
+          SSMActivation:
+            - property: "tag:nukeignore"
+              value : "true"
+          SSMAssociation:
+            - property: "tag:nukeignore"
+              value : "true"
+          SSMDocument:
+            - property: "tag:nukeignore"
+              value : "true"
+          SSMMaintenanceWindow:
+            - property: "tag:nukeignore"
+              value : "true"
+          SSMParameter:
+            - property: "tag:nukeignore"
+              value : "true"
+          SSMPatchBaseline:
+            - property: "tag:nukeignore"
+              value : "true"
+          SSMResourceDataSync:
+            - property: "tag:nukeignore"
+              value : "true"
+          StorageGatewayFileShare:
+            - property: "tag:nukeignore"
+              value : "true"
+          StorageGatewayGateway:
+            - property: "tag:nukeignore"
+              value : "true"
+          StorageGatewayTape:
+            - property: "tag:nukeignore"
+              value : "true"
+          StorageGatewayVolume:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalByteMatchSet:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalByteMatchSetIP:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalIPSetIP:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalIPSet:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRateBasedRulePredicate:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRateBasedRule:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRegexMatchSet:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRegexMatchTuple:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRegexPatternSet:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRegexPatternString:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRulePredicate:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalRule:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalWebACLRuleAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRegionalWebACL:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFRule:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFWebACLRuleAttachment:
+            - property: "tag:nukeignore"
+              value : "true"
+          WAFWebACL:
+            - property: "tag:nukeignore"
+              value : "true"
+          WorkSpacesWorkspace:
+            - property: "tag:nukeignore"
+              value : "true"

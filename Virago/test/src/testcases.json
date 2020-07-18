@@ -1,0 +1,267 @@
+[
+	{
+		"testname": "Create TSI Group",
+		"service": "iam",
+		"actions": 
+		[
+			"create_group"
+		],
+
+		"groupname": "TSI_testgroup",
+		"wants": 
+		[
+			"AccessDenied"
+		]
+	},
+	{
+		"testname": "Create user without permissionboundary",
+		"service": "iam",
+		"actions": 
+		[
+			"create_user_without_pb",
+			"delete_user"
+		],
+
+		"username": "testuser345234",
+		"wants": 
+		[
+			"allow",
+			"allow"
+		]
+	},
+
+	{
+		"testname": "Delete TSI role",
+		"service": "iam",
+		"actions": 
+		[
+			"delete_role"
+		],
+
+		"rolename": "TSI_Base_BackOffice_Role",
+		"wants": 
+		[
+			"AccessDenied"
+		]
+	},
+
+	{
+		"testname": "Manage regular group",
+		"service": "iam",
+		"actions": 
+		[
+			"create_group",
+			"attach_group_policy",
+			"detach_group_policy",
+			"delete_group"
+		],
+
+		"groupname": "testgroup1123",
+		"policyarn": "arn:aws:iam::aws:policy/AdministratorAccess",
+		"wants": 
+		[
+			"allow",
+			"allow",
+			"allow",
+			"allow"
+		]
+	},
+	{
+		"testname": "Renaming groups to TSI_",
+		"service": "iam",
+		"actions": 
+		[
+			"create_group",
+			"rename_group",
+			"delete_group"
+		],
+
+		"groupname": "testgroup341",
+		"policyarn": "arn:aws:iam::aws:policy/AdministratorAccess",
+		"newgroupname"  : "TSI_renamedgroup",
+		"wants": 
+		[
+			"allow",
+			"AccessDenied",
+			"allow"
+		]
+	},
+	{
+		"testname": "Renaming groups",
+		"service": "iam",
+		"actions": 
+		[
+			"create_group",
+			"rename_group",
+			"delete_group_renamed"
+		],
+
+		"groupname": "testgroup355",
+		"policyarn": "arn:aws:iam::aws:policy/AdministratorAccess",
+		"newgroupname"  : "renamedgroup",
+		"wants": 
+		[
+			"allow",
+			"allow",
+			"allow"
+		]
+	},
+
+	{
+		"testname": "Manage regular role",
+		"service": "iam",
+		"actions": 
+		[
+			"create_role_without_pb",
+			"attach_role_policy",
+			"detach_role_policy",
+			"delete_role"
+		],
+
+		"rolename": "testrole1234",
+		"policyarn": "arn:aws:iam::aws:policy/AdministratorAccess",
+		"assumepolicy": 
+		{
+			"Version": "2012-10-17",
+			"Statement": 
+			[
+				{
+					"Effect": "Allow",
+					"Principal": 
+					{
+						"AWS": "arn:aws:iam::275662325630:root"
+					},
+
+					"Action": "sts:AssumeRole",
+					"Condition": 
+					{
+						
+					}
+				}
+			]
+		},
+
+		"wants": 
+		[
+			"allow",
+			"allow",
+			"allow",
+			"allow"
+		]
+	},
+
+	{
+		"testname": "Create TSI Role",
+		"service": "iam",
+		"actions": 
+		[
+			"create_role_without_pb"
+		],
+
+		"rolename": "TSI_testgroup",
+		"assumepolicy": 
+		{
+			"Version": "2012-10-17",
+			"Statement": 
+			[
+				{
+					"Effect": "Allow",
+					"Principal": 
+					{
+						"AWS": "arn:aws:iam::275662325630:root"
+					},
+
+					"Action": "sts:AssumeRole",
+					"Condition": 
+					{
+						
+					}
+				}
+			]
+		},
+		"wants": 
+		[
+			"AccessDenied"
+		]
+	},
+
+{
+		"testname": "Create SNS other topic",
+		"service": "sns",
+		"actions": 
+		[
+			"create_sns_topic", "subscribe_sns_topic", "delete_sns_topic"
+		],
+
+		"topicname": "other_topic",
+		"wants": 
+		[
+			"allow","allow","allow"
+		]
+},
+{
+		"testname": "Create SNS TSI topic",
+		"service": "sns",
+		"actions": 
+		[
+			"create_sns_topic", "subscribe_sns_topic", "delete_sns_topic"
+		],
+
+		"topicname": "TSI_topic",
+		"wants": 
+		[
+			"AuthorizationError","AuthorizationError","AuthorizationError"
+		]
+},
+
+{
+		"testname": "Test kms permissions",
+		"service": "kms",
+		"actions": 
+		[
+			"create_kms_alias","update_kms_alias","delete_kms_alias"
+		],
+
+		"aliasname": "TSI_alias",
+		"targetkeyid": "dca5cfba-7fee-4baa-940c-157895d18fc3",
+		"wants": 
+		[
+			"AccessDeniedException", "AccessDeniedException", "AccessDeniedException"
+		]
+},
+
+{
+		"testname": "Test lambda permissions",
+		"service": "lambda",
+		"actions": 
+		[
+			"create_lambda_function","invoke_lambda_function",
+			"update_lambda_code","update_lambda_function_configuration",
+			"delete_lambda_function"
+		],
+
+		"functionname": "TSI_testlambda",
+		"wants": 
+		[
+			"AccessDeniedException", "AccessDeniedException", "AccessDeniedException",
+			"AccessDeniedException", "AccessDeniedException"
+		]
+},
+{
+		"testname": "Test cloudtrail permissions",
+		"service": "cloudtrail",
+		"actions": 
+		[
+			"create_cloudtrail","update_cloudtrail",
+			"delete_cloudtrail"
+		],
+
+		"cloudtrailname": "TSI_testcloudtrail",
+		"wants": 
+		[
+			"AccessDeniedException", "AccessDeniedException", "AccessDeniedException"
+		]
+}
+
+
+]

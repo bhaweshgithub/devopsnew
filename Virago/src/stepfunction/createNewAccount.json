@@ -1,0 +1,84 @@
+{
+  "Comment": "A state machine that submits a Job to AWS Batch and monitors the Job until it completes.",
+  "StartAt": "Get Organization Unit ID",
+  "States": {
+    "Get Organization Unit ID": {
+      "Type": "Task",
+      "InputPath" : "$",
+      "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:getOrgUnitID-_BRANCHNAME_",
+      "TimeoutSeconds": 600,
+      "ResultPath": "$.ouid",
+      "Next": "Create Account in Organizations"
+    },
+    "Create Account in Organizations": {
+      "Type": "Task",
+      "InputPath" : "$",
+      "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createAccountInOrganizations-_BRANCHNAME_",
+      "TimeoutSeconds": 600,
+      "ResultPath": "$.accountcreate",
+      "Next": "Job Complete?"
+    },
+    "Wait X Seconds": {
+      "Type": "Wait",
+      "Seconds": 10,
+      "Next": "Get Account Status"
+    },
+    "Get Account Status": {
+      "InputPath" : "$",
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:getAccountStatus-_BRANCHNAME_",
+      "Next": "Job Complete?",
+      "ResultPath": "$.accountcreate"
+    },
+    "Job Complete?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.accountcreate.CreateAccountStatus.State",
+          "StringEquals": "IN_PROGRESS",
+          "Next": "Wait X Seconds"
+        },
+        {
+          "Variable": "$.accountcreate.CreateAccountStatus.State",
+          "StringEquals": "SUCCEEDED",
+          "Next": "Create TSI Access"
+        }
+      ],
+      "Default": "Job Failed"
+    },
+    "Create TSI Access" : 
+    {
+      "Type": "Task",
+      "Resource" : "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createTSIAccess-_BRANCHNAME_",
+      "ResultPath": "$.tsiaccess",
+      "Next" : "Move Account to OU" 
+    },
+    "Move Account to OU": 
+    {
+      "Type": "Task",
+      "Resource" : "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:moveAccountToOU-_BRANCHNAME_",
+      "ResultPath": "$.accountmove",
+      "Next" : "Create SCP for account" 
+    },
+    "Create SCP for account":
+    {
+      "Type": "Task",
+      "Resource" : "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createAccountSCP-_BRANCHNAME_",
+      "ResultPath": "$.createscp",
+      "Next" : "Job finished" 
+    },
+	 
+    "Job Failed": {
+      "Type": "Task",
+      "Resource" : "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:returnFailure-_BRANCHNAME_",
+      "ResultPath": "$.Failed",
+      "End" : true
+    },
+    "Job finished": {
+      "InputPath" : "$",
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:deployProvision-_BRANCHNAME_",
+      "End": true
+          }
+  }
+}

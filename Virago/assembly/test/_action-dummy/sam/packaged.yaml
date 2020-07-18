@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'StageDummyOk Function
+
+  A lambda which returns ''Job succeeded''
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Outputs:
+  StageDummyOkApi:
+    Description: API Gateway endpoint URL for Prod stage for Stage Dummy OK function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/run/
+  StageDummyOkFunction:
+    Description: Stage Dummy OK Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - StageDummyOkFunction
+      - Arn
+  StageDummyOkFunctionIamRole:
+    Description: Implicit IAM Role created for Stage Dummy OK function
+    Value:
+      Fn::GetAtt:
+      - StageDummyOkFunction
+      - Arn
+Resources:
+  CodePipelineLambdaRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+    Type: AWS::IAM::Role
+  LambdaCodePipelineExecutionPolicy:
+    DependsOn:
+    - CodePipelineLambdaRole
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action:
+          - logs:*
+          Effect: Allow
+          Resource:
+          - arn:aws:logs:*:*:*
+        - Action:
+          - codepipeline:PutJobSuccessResult
+          - codepipeline:PutJobFailureResult
+          Effect: Allow
+          Resource:
+          - '*'
+        Version: '2012-10-17'
+      PolicyName: LambdaRolePolicy
+      Roles:
+      - Ref: CodePipelineLambdaRole
+    Type: AWS::IAM::Policy
+  StageDummyOkFunction:
+    DependsOn:
+    - CodePipelineLambdaRole
+    - LambdaCodePipelineExecutionPolicy
+    Properties:
+      CodeUri: s3://297193019640-sambucket/c08a1ca98d8f15f8a501fa963a25050f
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        HelloWorld:
+          Properties:
+            Method: get
+            Path: /run
+          Type: Api
+      Handler: stage-dummy-ok.lambda_handler
+      Runtime: python3.6
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

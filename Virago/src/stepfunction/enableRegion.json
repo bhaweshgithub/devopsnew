@@ -1,0 +1,77 @@
+{
+    "StartAt": "Check if there are new regions",
+    "States": {
+        "Check if there are new regions": {
+             "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.newregionscount",
+                    "NumericGreaterThan": 0,
+                    "Next": "Create Encryption Keys"
+                },
+              {
+                    "Variable": "$.newregionscount",
+                    "NumericEquals": 0,
+                    "Next": "Update Stackset instance"
+                }
+            ]
+        },
+        "Create Encryption Keys": {
+            "Type": "Task",
+            "InputPath": "$.encryptionparams",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createEncryptionKeys-_BRANCHNAME_",
+            "Next": "Update Stackset instance",
+            "ResultPath": "$.encryptionkeyresponse"
+        },
+        "Update Stackset instance": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:overrideStackSetParams-_BRANCHNAME_",
+            "Next": "EnableOrDisable AWS config",
+            "ResultPath": "$.baseline"
+        },
+        "EnableOrDisable AWS config": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:enableAWSConfig-_BRANCHNAME_",
+            "Next": "Wait X Seconds",
+            "ResultPath": "$.awsconfigresponce"
+        },
+       "Wait X Seconds": {
+            "Type": "Wait",
+            "Seconds": 50,
+            "Next": "Get Job Status"
+        },
+       "Get Job Status": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:getStackInstanceStateBaseline-_BRANCHNAME_",
+            "Next": "Job Complete?",
+            "ResultPath": "$.Statusbaseline"
+        },
+      "Job Complete?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.Statusbaseline",
+                    "StringEquals": "RUNNING",
+                    "Next": "Wait X Seconds"
+                },
+                {
+                    "Variable": "$.Statusbaseline",
+                    "StringEquals": "SUCCEEDED",
+                    "Next": "Job finished"
+                }
+            ],
+            "Default": "Job Failed"
+        },
+        "Job Failed": {
+            "Type": "Fail",
+            "Cause": "Couldn't create stack instance",
+            "Error": "DescribeJob returned FAILED"
+        },
+      "Job finished":{
+  "Type": "Succeed"
+}
+}
+}

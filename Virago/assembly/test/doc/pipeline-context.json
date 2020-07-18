@@ -1,0 +1,11 @@
+{
+    "aws_request_id": "8ef972bf-c3cb-11e8-a936-c3f3e4116947",
+    "log_group_name": "/aws/lambda/StageDummyOkFunction-StageDummyOkFunction-1XXW6BJ3Q6LWR",
+    "log_stream_name": "2018/09/29/[$LATEST]bfc7310c447f4dfe94dec1ac8d59706a",
+    "function_name": "StageDummyOkFunction-StageDummyOkFunction-1XXW6BJ3Q6LWR",
+    "memory_limit_in_mb": "128",
+    "function_version": "$LATEST",
+    "invoked_function_arn": "arn:aws:lambda:eu-central-1:297193019640:function:StageDummyOkFunction-StageDummyOkFunction-1XXW6BJ3Q6LWR",
+    "client_context": "None",
+    "identity": "<__main__.CognitoIdentity object at 0x7f21e38ecdd8>}<__main__.CognitoIdentity object at 0x7f21e38ecdd8>}<__main__.CognitoIdentity object at 0x7f21e38ecdd8>"
+}

@@ -1,0 +1,60 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "organizations:InviteAccountToOrganization",
+                "organizations:ListRoots",
+                "states:DescribeStateMachine",
+                "states:ListExecutions",
+                "states:CreateActivity",
+                "organizations:DescribeAccount",
+                "organizations:CreateAccount",
+                "organizations:DescribePolicy",
+                "organizations:EnableAWSServiceAccess",
+                "organizations:ListCreateAccountStatus",
+                "logs:CreateLogStream",
+                "cloudformation:DescribeStackEvents",
+                "states:SendTaskFailure",
+                "organizations:DescribeOrganization",
+                "states:GetExecutionHistory",
+                "organizations:EnablePolicyType",
+                "organizations:DescribeOrganizationalUnit",
+                "organizations:AttachPolicy",
+                "organizations:DescribeHandshake",
+                "organizations:CreatePolicy",
+                "organizations:DescribeCreateAccountStatus",
+                "organizations:CreateOrganization",
+                "cloudformation:ListStackResources",
+                "cloudformation:ListStacks",
+                "states:DescribeActivity",
+                "cloudformation:DescribeStackInstance",
+                "organizations:DetachPolicy",
+                "states:StopExecution",
+                "logs:CreateLogGroup",
+                "logs:PutLogEvents",
+                "cloudformation:DescribeStacks",
+                "states:DescribeStateMachineForExecution",
+                "states:SendTaskSuccess",
+                "organizations:ListAccounts",
+                "states:DescribeExecution",
+                "states:StartExecution",
+                "organizations:CreateOrganizationalUnit",
+                "states:SendTaskHeartbeat",
+                "states:GetActivityTask"
+            ],
+            "Resource": "*"
+        },
+	{
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": "sts:*",
+            "Resource": [
+                "arn:aws:iam::*:role/TSI_Base_FullAccess"
+            ]
+        }
+
+    ]
+}

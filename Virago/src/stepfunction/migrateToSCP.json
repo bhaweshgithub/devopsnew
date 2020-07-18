@@ -1,0 +1,30 @@
+{
+ "StartAt": ""Get Organization Unit ID",
+    "States": {
+      "Get Organization Unit ID": {
+      "Type": "Task",
+      "InputPath" : "$",
+      "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:getOrgUnitID-_BRANCHNAME_",
+      "TimeoutSeconds": 600,
+      "ResultPath": "$.ouid",
+      "Next": "Move Account to OU"
+    },
+    "Move Account to OU":
+    {
+      "Type": "Task",
+      "Resource" : "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:moveAccountToOU-_BRANCHNAME_",
+      "ResultPath": "$.accountmove",
+      "Next" : "Create SCP for account"
+    },
+    "Create SCP for account":
+    {
+      "Type": "Task",
+      "Resource" : "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createAccountSCP-_BRANCHNAME_",
+      "ResultPath": "$.createscp",
+      "Next" : "Job finished"
+    },
+     "Job finished": {
+            "Type": "Succeed"
+        }
+  }
+}

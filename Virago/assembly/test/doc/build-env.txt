@@ -1,0 +1,160 @@
+
+
+Error calling startBuild:
+User: arn:aws:sts::297193019640:assumed-role/PIPELINEDEV_eu-central-1_ServiceRoleForCodePipeline/1538234022043
+is not authorized to perform:
+codebuild:StartBuild on resource:
+arn:aws:codebuild:eu-central-1:297193019640:project/Virago-Codepipeline_TestStage
+
+
+[Container] 2018/09/29 14:49:59 Waiting for agent ping
+[Container] 2018/09/29 14:49:59 Waiting for DOWNLOAD_SOURCE
+[Container] 2018/09/29 14:50:00 Phase is DOWNLOAD_SOURCE
+[Container] 2018/09/29 14:50:00 CODEBUILD_SRC_DIR=/codebuild/output/src326333995/src
+[Container] 2018/09/29 14:50:00 YAML location is /codebuild/readonly/buildspec.yml
+[Container] 2018/09/29 14:50:00 Processing environment variables
+[Container] 2018/09/29 14:50:00 Moving to directory /codebuild/output/src326333995/src
+[Container] 2018/09/29 14:50:00 Registering with agent
+[Container] 2018/09/29 14:50:00 Phases found in YAML: 1
+[Container] 2018/09/29 14:50:00  BUILD: 1 commands
+[Container] 2018/09/29 14:50:00 Phase complete: DOWNLOAD_SOURCE Success: true
+[Container] 2018/09/29 14:50:00 Phase context status code:  Message: 
+[Container] 2018/09/29 14:50:00 Entering phase INSTALL
+[Container] 2018/09/29 14:50:00 Phase complete: INSTALL Success: true
+[Container] 2018/09/29 14:50:00 Phase context status code:  Message: 
+[Container] 2018/09/29 14:50:01 Entering phase PRE_BUILD
+[Container] 2018/09/29 14:50:01 Phase complete: PRE_BUILD Success: true
+[Container] 2018/09/29 14:50:01 Phase context status code:  Message: 
+[Container] 2018/09/29 14:50:01 Entering phase BUILD
+[Container] 2018/09/29 14:50:01 Running command env
+MAVEN_OPTS=-Dmaven.wagon.httpconnectionManager.maxPerRoute=2
+CODEBUILD_LAST_EXIT=0
+CODEBUILD_START_TIME=1538232577251
+CODEBUILD_AGENT_ENV_CODEBUILD_CTS_ENDPOINT=https://codebuild-builds.eu-central-1.amazonaws.com
+CODEBUILD_BMR_URL=https://CODEBUILD_AGENT:3000
+DOCKER_BUCKET=download.docker.com
+CODEBUILD_AGENT_ENV_BUNDLE_APP_CONFIG=/usr/local/bundle
+HOSTNAME=d0f16e98f26f
+CODEBUILD_AGENT_ENV_CODEBUILD_BUILD_URL=https://eu-central-1.console.aws.amazon.com/codebuild/home?region=eu-central-1#/builds/Virago-Codepipeline_TestStage:43f180a3-007f-4f61-b6c6-c9d3e5c1229d/view/new
+CODEBUILD_BUILD_ID=Virago-Codepipeline_TestStage:43f180a3-007f-4f61-b6c6-c9d3e5c1229d
+CODEBUILD_KMS_KEY_ID=arn:aws:kms:eu-central-1:297193019640:alias/aws/s3
+CODEBUILD_AGENT_ENV_CODEBUILD_PROJECT_UUID=bc5b2075-6a1d-4161-87ec-7d13fc86016d
+CODEBUILD_AGENT_ENV_CODEBUILD_GOLANG_AGENT=true
+CODEBUILD_AGENT_ENV_CODEBUILD_LOG_STREAM_INFO=W3sic291cmNlIjoiQUdFTlRfTE9HIiwiY29udGFpbmVyVGFnIjoiZGVmYXVsdCIsImN3bE5hbWUiOiIyOTcxOTMwMTk2NDAvNDNmMTgwYTMtMDA3Zi00ZjYxLWI2YzYtYzlkM2U1YzEyMjlkIiwiY3dsR3JvdXAiOiJjb2RlZmFjdG9yeS1ldS1jZW50cmFsLTEtcHJvZC1kZWZhdWx0LWFnZW50LWxvZ3MiLCJkZXN0aW5hdGlvbiI6IlNFUlZJQ0VfQUNDT1VOVCJ9LHsic291cmNlIjoiQ09OVEFJTkVSX0xPRyIsImNvbnRhaW5lclRhZyI6ImRlZmF1bHQiLCJjd2xOYW1lIjoiYnVpbGQvNDNmMTgwYTMtMDA3Zi00ZjYxLWI2YzYtYzlkM2U1YzEyMjlkIiwiY3dsR3JvdXAiOiJWaXJhZ28tQ29kZXBpcGVsaW5lX1Rlc3RTdGFnZSIsImRlc3RpbmF0aW9uIjoiQ1VTVE9NRVJfQUNDT1VOVCJ9XQ==
+HOME=/root
+OLDPWD=/codebuild/output/src326333995/src
+CODEBUILD_GOPATH=/codebuild/output/src326333995
+CODEBUILD_BUILD_SUCCEEDING=1
+CODEBUILD_AGENT_ENV_RUBY_MAJOR=2.3
+CODEBUILD_BUILD_ARN=arn:aws:codebuild:eu-central-1:297193019640:build/Virago-Codepipeline_TestStage:43f180a3-007f-4f61-b6c6-c9d3e5c1229d
+AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=/v2/credentials/9b4b355d-7313-4121-9a2a-f1b17e7f80ac
+CODEBUILD_AGENT_PORT_3000_TCP_ADDR=172.17.0.2
+DOCKER_SHA256=a9e90a73c3cdfbf238f148e1ec0eaff5eb181f92f35bdd938fd7dab18e1c4647
+CODEBUILD_INITIATOR=Administrator
+CODEBUILD_AGENT_PORT_3000_TCP_PORT=3000
+CODEBUILD_AGENT_PORT_3000_TCP_PROTO=tcp
+CODEBUILD_AGENT_ENV_CODEBUILD_LOG_GROUP=CodeBuild/BuildStreams
+AWS_DEFAULT_REGION=eu-central-1
+DIND_COMMIT=3b5fac462d21ca164b3778647420016315289034
+CODEBUILD_AGENT_ENV_CODEBUILD_CONTAINER_INFO=eyJkZWZhdWx0IiA6ICI1NjI2NWYxZC04ZmQ2LTQ2YTYtOTYxYi1iZTk2OGIzYTFiODcifQ==
+CODEBUILD_AGENT_ENV_AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=/v2/credentials/9b4b355d-7313-4121-9a2a-f1b17e7f80ac
+CODEBUILD_AGENT_ENV_CODEBUILD_KMS_KEY_ID=arn:aws:kms:eu-central-1:297193019640:alias/aws/s3
+CODEBUILD_AGENT_ENV_CODEBUILD_BUILD_ID=arn:aws:codebuild:eu-central-1:297193019640:build/Virago-Codepipeline_TestStage:43f180a3-007f-4f61-b6c6-c9d3e5c1229d
+CODEBUILD_AGENT_ENV_CODEBUILD_DEPRECATED=false
+CODEBUILD_AGENT_ENV_GEM_HOME=/usr/local/bundle
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+CODEBUILD_LOG_PATH=build/43f180a3-007f-4f61-b6c6-c9d3e5c1229d
+DOCKER_CHANNEL=stable
+CODEBUILD_AGENT_PORT_3000_TCP=tcp://172.17.0.2:3000
+CODEBUILD_AGENT_ENV_CODEBUILD_REGION=eu-central-1
+CODEBUILD_BUILD_IMAGE=aws/codebuild/docker:17.09.0
+CODEBUILD_SOURCE_REPO_URL=arn:aws:s3:::git-to-amazon-s3-outputbucket-1gk8h56mkdvm0/virago_ViragoProject.zip
+GITVERSION_VERSION=3.6.5
+CODEBUILD_AGENT_ENV_CODEBUILD_BUILD_ARN=arn:aws:codebuild:eu-central-1:297193019640:build/Virago-Codepipeline_TestStage:43f180a3-007f-4f61-b6c6-c9d3e5c1229d
+CODEBUILD_AGENT_ENV_RUBY_VERSION=2.3.1
+GOPATH=/codebuild/output/src326333995
+AWS_REGION=eu-central-1
+DOCKER_VERSION=17.09.0-ce
+CODEBUILD_SRC_DIR=/codebuild/output/src326333995/src
+CODEBUILD_AGENT_ENV_CODEBUILD_SECRET_KEY_BASE=BHbB3DWDHmCumah2RgnA7moY3rTIhRIXikAQtKIKz9otFGyDPPP4Z7pej4s1aqjE
+CODEBUILD_AGENT_ENV_CODEBUILD_CONTAINER_TOKENS=56265f1d-8fd6-46a6-961b-be968b3a1b87
+CODEBUILD_AUTH_TOKEN=56265f1d-8fd6-46a6-961b-be968b3a1b87
+CODEBUILD_AGENT_PORT=tcp://172.17.0.2:3000
+DOCKER_COMPOSE_VERSION=1.21.2
+PWD=/codebuild/output/src326333995/src
+CODEBUILD_AGENT_NAME=/ecs-d9c2e6dc-686d-487c-ab0f-a5a73fd049bd-1-default-c29ab7fdc1f4b5d2e701/CODEBUILD_AGENT
+CODEBUILD_AGENT_ENV_CODEBUILD_VPC=false
+
+[Container] 2018/09/29 14:50:01 Phase complete: BUILD Success: true
+[Container] 2018/09/29 14:50:01 Phase context status code:  Message: 
+[Container] 2018/09/29 14:50:01 Entering phase POST_BUILD
+[Container] 2018/09/29 14:50:01 Phase complete: POST_BUILD Success: true
+[Container] 2018/09/29 14:50:01 Phase context status code:  Message: 
+[Container] 2018/09/29 14:50:01 Expanding base directory path: .
+[Container] 2018/09/29 14:50:01 Assembling file list
+[Container] 2018/09/29 14:50:01 Expanding .
+[Container] 2018/09/29 14:50:01 Expanding artifact file paths for base directory .
+[Container] 2018/09/29 14:50:01 Assembling file list
+[Container] 2018/09/29 14:50:01 Expanding empty.txt
+[Container] 2018/09/29 14:50:01 Skipping invalid artifact path empty.txt
+[Container] 2018/09/29 14:50:01 Phase complete: UPLOAD_ARTIFACTS Success: false
+[Container] 2018/09/29 14:50:01 Phase context status code: CLIENT_ERROR Message: no matching artifact paths found
+
+MAVEN_OPTS=-Dmaven.wagon.httpconnectionManager.maxPerRoute=2
+CODEBUILD_LAST_EXIT=0
+CODEBUILD_START_TIME=1538235178431
+CODEBUILD_AGENT_ENV_CODEBUILD_CTS_ENDPOINT=https://codebuild-builds.eu-central-1.amazonaws.com
+CODEBUILD_BMR_URL=https://CODEBUILD_AGENT:3000
+DOCKER_BUCKET=download.docker.com
+CODEBUILD_AGENT_ENV_BUNDLE_APP_CONFIG=/usr/local/bundle
+CODEBUILD_SOURCE_VERSION=arn:aws:s3:::297193019640-pipeline/Develop-CodePipeline/viragobuil/JTOQDA5.zip
+HOSTNAME=49546f9d0815
+CODEBUILD_AGENT_ENV_CODEBUILD_BUILD_URL=https://eu-central-1.console.aws.amazon.com/codebuild/home?region=eu-central-1#/builds/Virago-Codepipeline_TestStage:c33090a2-ebd1-4c92-82f9-2db7212af722/view/new
+CODEBUILD_BUILD_ID=Virago-Codepipeline_TestStage:c33090a2-ebd1-4c92-82f9-2db7212af722
+CODEBUILD_KMS_KEY_ID=arn:aws:kms:eu-central-1:297193019640:alias/aws/s3
+CODEBUILD_AGENT_ENV_CODEBUILD_PROJECT_UUID=bc5b2075-6a1d-4161-87ec-7d13fc86016d
+CODEBUILD_AGENT_ENV_CODEBUILD_GOLANG_AGENT=true
+CODEBUILD_AGENT_ENV_CODEBUILD_LOG_STREAM_INFO=W3sic291cmNlIjoiQUdFTlRfTE9HIiwiY29udGFpbmVyVGFnIjoiZGVmYXVsdCIsImN3bE5hbWUiOiIyOTcxOTMwMTk2NDAvYzMzMDkwYTItZWJkMS00YzkyLTgyZjktMmRiNzIxMmFmNzIyIiwiY3dsR3JvdXAiOiJjb2RlZmFjdG9yeS1ldS1jZW50cmFsLTEtcHJvZC1kZWZhdWx0LWFnZW50LWxvZ3MiLCJkZXN0aW5hdGlvbiI6IlNFUlZJQ0VfQUNDT1VOVCJ9LHsic291cmNlIjoiQ09OVEFJTkVSX0xPRyIsImNvbnRhaW5lclRhZyI6ImRlZmF1bHQiLCJjd2xOYW1lIjoiYnVpbGQvYzMzMDkwYTItZWJkMS00YzkyLTgyZjktMmRiNzIxMmFmNzIyIiwiY3dsR3JvdXAiOiJWaXJhZ28tQ29kZXBpcGVsaW5lX1Rlc3RTdGFnZSIsImRlc3RpbmF0aW9uIjoiQ1VTVE9NRVJfQUNDT1VOVCJ9XQ==
+HOME=/root
+OLDPWD=/codebuild/output/src804389243/src
+CODEBUILD_GOPATH=/codebuild/output/src804389243
+CODEBUILD_RESOLVED_SOURCE_VERSION=dws1bxQam_0KykTkov5.SZ4cNHt71Q22
+CODEBUILD_BUILD_SUCCEEDING=1
+CODEBUILD_AGENT_ENV_RUBY_MAJOR=2.3
+CODEBUILD_BUILD_ARN=arn:aws:codebuild:eu-central-1:297193019640:build/Virago-Codepipeline_TestStage:c33090a2-ebd1-4c92-82f9-2db7212af722
+AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=/v2/credentials/3f705b58-ac81-4cb6-9fd1-b64b3130686e
+CODEBUILD_AGENT_PORT_3000_TCP_ADDR=172.17.0.2
+DOCKER_SHA256=a9e90a73c3cdfbf238f148e1ec0eaff5eb181f92f35bdd938fd7dab18e1c4647
+CODEBUILD_INITIATOR=codepipeline/Develop-CodePipeline
+CODEBUILD_AGENT_PORT_3000_TCP_PORT=3000
+CODEBUILD_AGENT_PORT_3000_TCP_PROTO=tcp
+CODEBUILD_AGENT_ENV_CODEBUILD_LOG_GROUP=CodeBuild/BuildStreams
+AWS_DEFAULT_REGION=eu-central-1
+DIND_COMMIT=3b5fac462d21ca164b3778647420016315289034
+CODEBUILD_AGENT_ENV_CODEBUILD_CONTAINER_INFO=eyJkZWZhdWx0IiA6ICI2ZTNhZGEwYy0wZjA4LTQ2ZGMtOTU0MS1hODNkMjg4ZmI4MWMifQ==
+CODEBUILD_AGENT_ENV_AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=/v2/credentials/3f705b58-ac81-4cb6-9fd1-b64b3130686e
+CODEBUILD_AGENT_ENV_CODEBUILD_KMS_KEY_ID=arn:aws:kms:eu-central-1:297193019640:alias/aws/s3
+CODEBUILD_AGENT_ENV_CODEBUILD_DEPRECATED=false
+CODEBUILD_AGENT_ENV_CODEBUILD_BUILD_ID=arn:aws:codebuild:eu-central-1:297193019640:build/Virago-Codepipeline_TestStage:c33090a2-ebd1-4c92-82f9-2db7212af722
+CODEBUILD_AGENT_ENV_GEM_HOME=/usr/local/bundle
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+CODEBUILD_LOG_PATH=build/c33090a2-ebd1-4c92-82f9-2db7212af722
+DOCKER_CHANNEL=stable
+CODEBUILD_AGENT_PORT_3000_TCP=tcp://172.17.0.2:3000
+CODEBUILD_AGENT_ENV_CODEBUILD_REGION=eu-central-1
+CODEBUILD_BUILD_IMAGE=aws/codebuild/docker:17.09.0
+GITVERSION_VERSION=3.6.5
+CODEBUILD_AGENT_ENV_CODEBUILD_BUILD_ARN=arn:aws:codebuild:eu-central-1:297193019640:build/Virago-Codepipeline_TestStage:c33090a2-ebd1-4c92-82f9-2db7212af722
+CODEBUILD_AGENT_ENV_RUBY_VERSION=2.3.1
+GOPATH=/codebuild/output/src804389243
+AWS_REGION=eu-central-1
+DOCKER_VERSION=17.09.0-ce
+CODEBUILD_SRC_DIR=/codebuild/output/src804389243/src
+CODEBUILD_AGENT_ENV_CODEBUILD_SECRET_KEY_BASE=4BKGiioSfajKQJyT5KTXmKZh7Bnjj0SDogG1PUn3SNmllCoW6mPoh2puB5jQACPj
+CODEBUILD_AGENT_ENV_CODEBUILD_CONTAINER_TOKENS=6e3ada0c-0f08-46dc-9541-a83d288fb81c
+CODEBUILD_AUTH_TOKEN=6e3ada0c-0f08-46dc-9541-a83d288fb81c
+CODEBUILD_AGENT_PORT=tcp://172.17.0.2:3000
+DOCKER_COMPOSE_VERSION=1.21.2
+PWD=/codebuild/output/src804389243/src
+CODEBUILD_AGENT_NAME=/ecs-15f5774b-00e3-48e3-b623-3d459b89020b-1-default-d0f5aaa4ffe9accc5e00/CODEBUILD_AGENT
+CODEBUILD_AGENT_ENV_CODEBUILD_VPC=false

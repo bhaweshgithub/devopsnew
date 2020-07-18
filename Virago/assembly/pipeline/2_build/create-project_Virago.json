@@ -1,0 +1,48 @@
+{
+  "name": "Virago_Pipeline_Build_Stage",
+  "source": {
+    "type": "S3",
+    "location": "arn:aws:s3:::git-to-amazon-s3-outputbucket-1fuwlpd9otnff/virago/ViragoProject/virago_ViragoProject_Development.zip",
+    "buildspec": "assembly/build/buildspec.build.yml",
+    "insecureSsl": false
+  },
+  "artifacts": {
+    "type": "S3",
+    "location": "git-to-amazon-s3-outputbucket-1fuwlpd9otnff",
+    "namespaceType": "NONE",
+    "name": "/",
+    "packaging": "NONE",
+    "encryptionDisabled": false
+  },
+  "cache": {
+    "type": "NO_CACHE"
+  },
+  "environment": {
+    "type": "LINUX_CONTAINER",
+    "image": "aws/codebuild/python:3.6.5",
+    "computeType": "BUILD_GENERAL1_SMALL",
+    "environmentVariables": [
+      {
+        "name": "branchname",
+        "value": "master",
+        "type": "PLAINTEXT"
+      },
+      {
+        "name": "bucketname",
+        "value": "git-to-amazon-s3-outputbucket-1fuwlpd9otnff",
+        "type": "PLAINTEXT"
+      },
+      {
+        "name": "accountid",
+        "value": "412318185247",
+        "type": "PLAINTEXT"
+      }
+    ],
+    "privilegedMode": false
+  },
+  "serviceRole": "arn:aws:iam::412318185247:role/service-role/codebuild-LambdaDeployer-service-role",
+  "timeoutInMinutes": 60,
+  "encryptionKey": "arn:aws:kms:eu-central-1:412318185247:alias/aws/s3",
+  "tags": [],
+  "badgeEnabled": false
+}

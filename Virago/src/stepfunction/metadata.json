@@ -1,0 +1,35 @@
+{
+"StepFunctions" :
+[
+	{
+		"machinename" : "createNewAccount",
+		"rolename": "StatesExecutionRole-eu-central-1",
+		"source" : "createNewAccount.json"
+	},
+	{
+		"machinename" : "PROD-Provision_Baseline_Release_1",
+		"rolename": "StatesExecutionRole-eu-central-1",
+		"source" : "PROD-Provision_Baseline_Release_1.json"
+	},
+	 {
+                "machinename" : "checkRootMFA",
+                "rolename": "StatesExecutionRole-eu-central-1",
+                "source" : "checkRootMFA.json"
+        },
+       	{
+                "machinename" : "enableRegion",
+                "rolename": "StatesExecutionRole-eu-central-1",
+                "source" : "enableRegion.json"
+	}, 
+	{
+                "machinename" : "PROD-Update_Baseline_Release_1",
+                "rolename": "StatesExecutionRole-eu-central-1",
+                "source" : "PROD-Update_Baseline_Release_1.json"
+	},
+	{
+                "machinename" : "removeProvision",
+                "rolename": "StatesExecutionRole-eu-central-1",
+                "source" : "removeProvision.json"
+	}
+]
+}

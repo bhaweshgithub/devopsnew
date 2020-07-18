@@ -1,0 +1,68 @@
+{
+"Parameters": 
+	{
+		"branchname": 
+		{
+			"Type": "String",
+			"Default": "master",
+			"Description": "Branchname - used for iam role of the stacksets"
+		}
+	},
+	"Resources": 
+	{
+		"StackSetAdminrole": 
+		{
+			"Type": "AWS::IAM::Role",
+			"Properties": 
+			{
+				"AssumeRolePolicyDocument": 
+				{
+					"Version": "2012-10-17",
+					"Statement": 
+					[
+						{
+							"Sid": "",
+							"Effect": "Allow",
+							"Principal": 
+							{
+								"Service": "cloudformation.amazonaws.com"
+							},
+
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+
+				"Policies": 
+				[
+					{
+						"PolicyDocument": 
+						{
+							"Version": "2012-10-17",
+							"Statement": 
+							[
+								{
+									"Action": 
+									[
+										"sts:AssumeRole"
+									],
+
+									"Resource": 
+									[
+										"arn:aws:iam::*:role/TSI_Base_FullAccess"
+									],
+
+									"Effect": "Allow"
+								}
+							]
+						},
+
+						"PolicyName": { "Fn::Join" : [ "", [ "AssumeRole-AWSCloudFormationStackSetExecutionRole", "-",{ "Ref" : "branchname" } ] ] } 
+					}
+				],
+				"RoleName": { "Fn::Join" : [ "", [ "AWSCloudFormationStackSetAdministrationRole", "-",{ "Ref" : "branchname" } ] ] }
+		
+			}
+			}
+	}
+}

@@ -1,0 +1,166 @@
+resource "aws_cloudformation_stack" "TSI_SNS_Topic" {
+ name =  "TSI-SNS-Topic"
+  parameters = {
+	TrailEmailAddress = "${var.email}"
+	TrailAccountName = "${var.TrailAccountName}"
+}
+ template_body = <<STACK
+{
+"Parameters" : {
+"TrailEmailAddress": {
+"Type" : "String",
+"Description" : "Email address for cloud trail"
+},
+"TrailAccountName": {
+"Type" : "String",
+"Description" : "Account name",
+"Default" : "null"
+}
+},
+"Conditions" : {
+},
+"Resources" : {
+ "snstopic" : {
+  "Type" : "AWS::SNS::Topic",
+  "Properties" : {
+    "DisplayName" : "Login",
+    "Subscription" : [ {
+  "Endpoint" : {"Ref" : "TrailEmailAddress"},
+  "Protocol" : "email"
+},
+{
+  "Endpoint" : "aws-soc@t-systems.com" ,
+  "Protocol" : "email"
+}
+ ],
+    "TopicName" : "TSI_Base_Security_Incident"
+  }
+},
+"rulefailed" : {
+  "Type" : "AWS::Events::Rule",
+  "Properties" : {
+    "Description" : "logs each events where an unsuccessful login was detected",
+    "EventPattern" : {
+  "detail-type": [
+    "AWS API Call via CloudTrail",
+    "AWS Console Sign In via CloudTrail"
+  ],
+  "detail": {
+    "responseElements": {
+      "ConsoleLogin": [
+        "Failure"
+      ]
+    }
+  }
+},
+    "Name" : "TSI_Base_CW_Rule_IAM_FailedLogin",
+    "State" : "ENABLED",
+    "Targets" : [ {
+  "Arn" : {
+  "Ref" : "snstopic"
+  },
+  "Id" : "tsi_base_failedlogin",
+  "Input" : { "Fn::Sub": [ "{ \"Class event\" : \"type C\" ,\"Account name\" : \" $${accountname} \" }", { "accountname": {"Ref" : "TrailAccountName"}} ]}
+} ]
+  },
+  "DependsOn" : ["snstopic", "snspolicy"]
+},
+"ruleroot" : {
+  "Type" : "AWS::Events::Rule",
+  "Properties" : {
+    "Description" : "report login event for the root account",
+    "EventPattern" : {
+  "detail-type": [
+    "AWS API Call via CloudTrail",
+    "AWS Console Sign In via CloudTrail"
+  ],
+  "detail": {
+    "userIdentity": {
+      "Type": [
+        "Root"
+      ]
+    }
+  }
+},
+    "Name" : "TSI_Base_CW_Rule_Root_Login",
+    "State" : "ENABLED",
+    "Targets" : [ {
+  "Arn" : {
+                      "Ref" : "snstopic"
+                    },
+  "Id" : "tsi_base_rootlogin",
+  "Input" :  { "Fn::Sub": [ "{ \"Class event\" : \"type A\" ,\"Account name\" : \" $${accountname} \" }", { "accountname": {"Ref" : "TrailAccountName"}} ]}
+} ]
+  },
+  "DependsOn" : ["snstopic", "snspolicy"]
+},
+"snspolicy":
+{
+  "Type" : "AWS::SNS::TopicPolicy",
+  "Properties" :
+    {
+      "PolicyDocument" : {
+  "Version": "2008-10-17",
+  "Id": "__default_policy_ID",
+  "Statement": [
+    {
+      "Sid": "__default_statement_ID",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": [
+        "SNS:GetTopicAttributes",
+        "SNS:SetTopicAttributes",
+        "SNS:AddPermission",
+        "SNS:RemovePermission",
+        "SNS:DeleteTopic",
+        "SNS:Subscribe",
+        "SNS:ListSubscriptionsByTopic",
+        "SNS:Publish",
+        "SNS:Receive"
+      ],
+      "Resource": {
+                "Fn::Sub":
+                [
+                  "arn:aws:sns:$${region}:$${accountid}:Security",
+                  {"region" : { "Ref" : "AWS::Region" },
+                     "accountid" : { "Ref": "AWS::AccountId" }
+
+                      }
+                ]
+              },
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceOwner": { "Ref": "AWS::AccountId" }
+        }
+      }
+    },
+    {
+      "Sid": "AWSSNSlogin",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": "SNS:Publish",
+      "Resource": {
+                "Fn::Sub":
+                [
+                  "arn:aws:sns:$${region}:$${accountid}:Security",
+                  {"region" : { "Ref" : "AWS::Region" },
+                     "accountid" : { "Ref": "AWS::AccountId" }
+
+                      }
+                ]
+              }
+    }
+  ]
+},
+      "Topics" : [ { "Ref" : "snstopic" }]
+    },
+    "DependsOn" : ["snstopic"]
+}
+}
+}
+STACK
+}

@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Starting up codebuild
+      - apt update && apt install -y jq python-pip
+  build:
+    commands:
+      - echo Starting build test application
+      - env
+      - pip install virtualenv
+      - pip install aws-sam-cli
+      - echo "=========================================================="
+      - if [ -e assembly/test/action-build/.env.test ]; then . assembly/test/action-build/.env.test; fi
+      - cd ${CODEBUILD_SRC_DIR}/test
+      - echo "=========================================================="
+      - virtualenv --python python3 .venv
+      - . .venv/bin/activate
+      - mkdir -p build
+      - pip install -r requirements.txt -t build
+      - cd sam 
+      - cp -av ../src/*py ../build/
+      - ls -al ../build
+      - sam package --template-file $SAM_TEMPLATE_FILE --output-template-file $SAM_OUTPUT_TEMPLATE_FILE --s3-bucket $SAM_BUCKET
+      - # copy packaged-template to bucket for handoder to deployment
+      - # TODO this must be set unique
+      - # aws s3 cp $SAM_OUTPUT_TEMPLATE_FILE s3://$SAM_BUCKET/$SAM_OUTPUT_TEMPLATE_FILE
+      - sam deploy --template-file $SAM_OUTPUT_TEMPLATE_FILE --stack-name codepipeline-$SAM_BRANCH-teststage-test-policies --capabilities CAPABILITY_IAM
+      
+artifacts:
+  files:
+    - test/sam/packaged.yaml

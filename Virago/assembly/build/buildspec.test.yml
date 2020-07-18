@@ -1,0 +1,38 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Starting up codebuild
+      - apt update && apt install -y jq 
+      - apt install -y zip
+  build:
+    commands:
+      - echo Starting build
+      - ls -ltR ${CODEBUILD_SRC_DIR}
+      - . assembly/build/.env.test
+      - echo "branchname=${branchname}"
+      - cd ${CODEBUILD_SRC_DIR}/test/src
+      - cd policyFunctionTester
+      - zip ../policyFunctionTester.zip -r .
+      - cd .. 
+      - cd testHandler
+      - zip ../testHandler.zip -r .
+      - cd .. 
+      - aws s3 cp --recursive . s3://${bucketname}/test
+      - echo "Deploying template with cloudformation for provision parts (lambda,etc)"
+      - aws cloudformation create-stack --stack-name testframework-${branchname} --template-url https://s3.eu-central-1.amazonaws.com/${bucketname}/test/cftemplate-testcases.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=branchname,ParameterValue=${branchname},ParameterKey=s3bucket,ParameterValue=${bucketname}
+      - echo "Waiting for finish"
+      - aws cloudformation wait stack-create-complete --stack-name testframework-${branchname}
+      - echo "finished cloudformation template deployment, Creating test role on test account"
+      - echo "Assume role"
+      - assumerole=$(aws sts assume-role --role-arn "arn:aws:iam::${testaccountid}:role/TSI_Base_FullAccess" --role-session-name "testroledeploy")
+      - export AWS_ACCESS_KEY_ID=$(echo $assumerole | jq .Credentials.AccessKeyId | xargs)
+      - export AWS_SECRET_ACCESS_KEY=$(echo $assumerole | jq .Credentials.SecretAccessKey | xargs)
+      - export AWS_SESSION_TOKEN=$(echo $assumerole | jq .Credentials.SessionToken | xargs)
+      - echo "Creating role on test account"
+      - aws iam create-role --role-name policytestuser --assume-role-policy-document file://testroletrustpolicy.json 
+      - aws iam attach-role-policy --role-name policytestuser --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+      - aws iam create-role --role-name policytestfullRole --assume-role-policy-document file://testroletrustpolicy.json 
+      - aws iam attach-role-policy --role-name policytestfullRole --policy-arn arn:aws:iam::aws:policy/AdministratorAccess      
+      - echo "Done with the test framework deployment"

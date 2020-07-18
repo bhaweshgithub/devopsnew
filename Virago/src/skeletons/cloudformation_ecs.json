@@ -1,0 +1,231 @@
+{
+"Parameters": 
+	{
+		"branchname": 
+		{
+			"Type": "String",
+			"Default": "master",
+			"Description": "Branchname - used for iam role of the stacksets"
+		}
+	},
+	"Resources": 
+	{
+		"ecsrole": 
+		{
+			"Type": "AWS::IAM::Role",
+			"Properties": 
+			{
+				"AssumeRolePolicyDocument": 
+				{
+					"Version": "2012-10-17",
+					"Statement": 
+					[
+						{
+							"Sid": "",
+							"Effect": "Allow",
+							"Principal": 
+							{
+								"Service": "ecs.amazonaws.com"
+							},
+
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+
+				"Policies": 
+				[
+					{
+						"PolicyDocument": 
+						{
+							"Version": "2012-10-17",
+							"Statement": [
+								{
+									"Action": [
+										"organizations:InviteAccountToOrganization",
+										"organizations:ListRoots",
+										"states:DescribeStateMachine",
+										"states:ListExecutions",
+										"states:CreateActivity",
+										"organizations:DescribeAccount",
+										"organizations:CreateAccount",
+										"organizations:DescribePolicy",
+										"organizations:EnableAWSServiceAccess",
+										"organizations:ListCreateAccountStatus",
+										"logs:CreateLogStream",
+										"cloudformation:DescribeStackEvents",
+										"states:SendTaskFailure",
+										"organizations:DescribeOrganization",
+										"states:GetExecutionHistory",
+										"organizations:EnablePolicyType",
+										"organizations:DescribeOrganizationalUnit",
+										"organizations:AttachPolicy",
+										"organizations:DescribeHandshake",
+										"organizations:CreatePolicy",
+										"organizations:DescribeCreateAccountStatus",
+										"organizations:CreateOrganization",
+										"cloudformation:ListStackResources",
+										"cloudformation:ListStacks",
+										"states:DescribeActivity",
+										"cloudformation:DescribeStackInstance",
+										"organizations:DetachPolicy",
+										"states:StopExecution",
+										"logs:CreateLogGroup",
+										"logs:PutLogEvents",
+										"cloudformation:DescribeStacks",
+										"states:DescribeStateMachineForExecution",
+										"states:SendTaskSuccess",
+										"organizations:ListAccounts",
+										"states:DescribeExecution",
+										"states:StartExecution",
+										"organizations:CreateOrganizationalUnit",
+										"states:SendTaskHeartbeat",
+										"states:GetActivityTask"
+									],
+									"Resource": "*",
+									"Effect": "Allow",
+									"Sid": "VisualEditor0"
+								},
+								{
+									"Action": "sts:*",
+									"Resource": [
+										"arn:aws:iam::*:role/TSI_Base_FullAccess"
+									],
+									"Effect": "Allow",
+									"Sid": "VisualEditor1"
+								}
+							]
+						},
+
+						"PolicyName": { "Fn::Join" : [ "", [ "ECS_Policy_ORG_States", "-",{ "Ref" : "branchname" } ] ] } 
+					},
+					{
+						"PolicyDocument": 
+						{
+							"Version": "2012-10-17",
+							"Statement": [
+								{
+									"Action": [
+										"ses:SendEmail",
+										"ses:SendTemplatedEmail",
+										"ses:SendRawEmail"
+									],
+									"Resource": "*",
+									"Effect": "Allow",
+									"Sid": "VisualEditor0"
+								},
+								{
+									"Action": [
+										"s3:PutObject",
+										"s3:GetObjectAcl",
+										"s3:GetObject",
+										"s3:ListBucket",
+										"s3:PutObjectAcl"
+									],
+									"Resource": [
+										"arn:aws:s3:::s3-confidential",
+										"arn:aws:s3:::s3-confidential/*",
+										"arn:aws:s3:::27565630-provision-confidential",
+										"arn:aws:s3:::27565630-provision-confidential/*"
+									],
+									"Effect": "Allow",
+									"Sid": "VisualEditor1"
+								},
+								{
+									"Action": [
+										"s3:ListAllMyBuckets",
+										"s3:HeadBucket",
+										"kms:Decrypt",
+										"kms:ReEncryptFrom",
+										"kms:ListKeys",
+										"kms:Encrypt",
+										"kms:ListAliases",
+										"kms:ReEncryptTo",
+										"kms:GenerateDataKey",
+										"kms:DescribeKey"
+									],
+									"Resource": "arn:aws:kms:eu-central-1:*:key/*",
+									"Effect": "Allow",
+									"Sid": "VisualEditor2"
+								}
+							]
+						},
+
+						"PolicyName": { "Fn::Join" : [ "", [ "S3Bucket_Access", "-",{ "Ref" : "branchname" } ] ] } 
+					} ],
+				"RoleName": { "Fn::Join" : [ "", [ "ECSProvision-Role", "-",{ "Ref" : "branchname" } ] ] }
+			}
+		},
+		"StackSetAdminrole": 
+		{
+			"Type": "AWS::IAM::Role",
+			"Properties": 
+			{
+				"AssumeRolePolicyDocument": 
+				{
+					"Version": "2012-10-17",
+					"Statement": 
+					[
+						{
+							"Sid": "",
+							"Effect": "Allow",
+							"Principal": 
+							{
+								"Service": "cloudformation.amazonaws.com"
+							},
+
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+
+				"Policies": 
+				[
+					{
+						"PolicyDocument": 
+						{
+							"Version": "2012-10-17",
+							"Statement": 
+							[
+								{
+									"Action": 
+									[
+										"sts:AssumeRole"
+									],
+
+									"Resource": 
+									[
+										"arn:aws:iam::*:role/TSI_Base_FullAccess"
+									],
+
+									"Effect": "Allow"
+								}
+							]
+						},
+
+						"PolicyName": { "Fn::Join" : [ "", [ "AssumeRole-AWSCloudFormationStackSetExecutionRole", "-",{ "Ref" : "branchname" } ] ] } 
+					}
+				],
+				"RoleName": { "Fn::Join" : [ "", [ "AWSCloudFormationStackSetAdministrationRole", "-",{ "Ref" : "branchname" } ] ] }
+		
+			}
+			},
+	"ecstask": {
+		"Type" : "AWS::ECS::TaskDefinition",
+		"Properties" : {
+			"ContainerDefinitions" : [
+				{
+				"Image": { "Fn::Sub" : [ "${accountid}.dkr.ecr.eu-central-1.amazonaws.com/provision", { "accountid": {"Ref" : "AWS::AccountId"} } ] },
+				"Name": "provision"
+			}
+			],
+			"Cpu" : "256",
+			"ExecutionRoleArn" : {"Ref" : "ecsrole"},
+			"Memory" : "512",
+			"NetworkMode" : "awsvpc",
+			"RequiresCompatibilities" : [ "FARGATE" ],
+			"TaskRoleArn" : {"Ref" : "ecsrole"}
+		  }
+	  }
+	}
+}

@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "sts:DecodeAuthorizationMessage",
+                "sts:GetCallerIdentity"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": "sts:*",
+            "Resource": [
+                "arn:aws:iam::*:role/TSI_Base_EventBusHandlerRole",
+                "arn:aws:iam::*:role/OrganizationAccountAccessRole",
+                "arn:aws:iam::*:role/TSI_Base_FullAccess",
+                "arn:aws:iam::*:role/TSI_Base_S3CloudtrailRole"
+            ]
+        }
+    ]
+}

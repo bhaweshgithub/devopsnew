@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Starting up codebuild
+      - apt update && apt install -y jq 
+  build:
+    commands:
+      - echo Starting build
+      - ls -ltR ${CODEBUILD_SRC_DIR}
+      - . assembly/build/.env.prod
+      - python3 assembly/build/assembler.py
+      - cd ${CODEBUILD_SRC_DIR}/src
+      - sed "s/###terraformbucket###/${terraformbucket}/g" terraform/provider.tpl > terraform/provider.tf
+      - echo "Assume role" 
+      - assumerole=$(aws sts assume-role --role-arn "arn:aws:iam::275662325630:role/CICD_TSI_CodeBuild_Role" --role-session-name "proddeployment")
+      - export AWS_ACCESS_KEY_ID=$(echo $assumerole | jq .Credentials.AccessKeyId | xargs)
+      - export AWS_SECRET_ACCESS_KEY=$(echo $assumerole | jq .Credentials.SecretAccessKey | xargs)
+      - export AWS_SESSION_TOKEN=$(echo $assumerole | jq .Credentials.SessionToken | xargs)
+      - aws s3 cp --recursive ${branchname} s3://${bucketname}/${branchname}
+      - aws s3 cp --recursive terraform/ s3://${terraformbucket}/terraform_templates/${terraformversion}
+      - echo "Finished with copy"

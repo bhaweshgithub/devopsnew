@@ -1,0 +1,1234 @@
+{
+	"Parameters":
+	{
+		"enabledregions":
+		{
+			"Type": "String",
+			"Description": "list of enabled regions",
+			"Default": "eu-central-1"
+		},
+
+		"SecDevopsAccountID":
+		{
+			"Type": "String",
+			"Default": "140492085282",
+			"Description": "Value for secdevops account id where event bus will accept our events"
+		},
+
+		"rootAccountId":
+		{
+			"Type": "String",
+			"Default": "275662325630",
+			"Description": "Value for root account id"
+		},
+
+		"supportenabled":
+		{
+			"Type": "String",
+			"Default": "false",
+			"AllowedValues":
+			[
+				"true",
+				"false"
+			],
+
+			"Description": "allow support for users: true or false"
+		},
+
+		"awsconfigenabled":
+		{
+			"Type": "String",
+			"Default": "false",
+			"AllowedValues":
+			[
+				"true",
+				"false"
+			],
+
+			"Description": "allow AWS Config for users: true or false"
+		},
+
+		"AWSConfigBucket":
+		{
+			"Type": "String",
+			"Default": "tsi-aws-config-logs",
+		    "Description": "S3 bucket in DevSecOps account for AWS config delivery channel"
+		}
+	},
+
+	"Conditions":
+	{
+
+	},
+
+	"Mappings":
+	{
+		"supportmap":
+		{
+			"supportenabledglobal":
+			{
+				"true":
+				[
+					"iam:DeleteUserPermissionsBoundary",
+					"iam:DeleteRolePermissionsBoundary",
+					"iam:DeleteAccountPasswordPolicy",
+					"iam:UpdateAccountPasswordPolicy",
+					"iam:CreateAccountAlias",
+					"iam:DeleteAccountAlias",
+					"iam:DeleteServiceLinkedRole",
+					"organizations:*",
+					"account:*"
+				],
+
+				"false":
+				[
+					"iam:DeleteUserPermissionsBoundary",
+					"iam:DeleteRolePermissionsBoundary",
+					"iam:DeleteAccountPasswordPolicy",
+					"iam:UpdateAccountPasswordPolicy",
+					"iam:CreateAccountAlias",
+					"iam:DeleteAccountAlias",
+					"iam:DeleteServiceLinkedRole",
+					"organizations:*",
+					"account:*",
+					"support:*"
+				]
+			}
+		},
+		"awsconfigmap": {
+			"awsconfigenabledglobal" : {
+			"true" : ["config:DeleteDeliveryChannel",
+					 "config:PutDeliveryChannel",
+					 "config:DeleteConfigurationRecorder",
+					 "config:PutConfigurationRecorder",
+					 "config:StartConfigurationRecorder",
+					 "config:StopConfigurationRecorder"
+					 ],
+			"false" : ["config:*"]
+			}
+		 }
+	},
+
+	"Resources":
+	{
+		"IAMPOLICYMFA":
+		{
+			"Type": "AWS::IAM::ManagedPolicy",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"Description":
+				{
+					"Fn::Join":
+					[
+						" ",
+						[
+							"Force users with any right access to configure their authentication with MFA before gaining their privileges for ",
+							{
+								"Ref": "AWS::AccountId"
+							}
+						]
+					]
+				},
+
+				"Groups":
+				[
+					"TSI_Base_Group_PowerUser"
+				],
+
+				"PolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Sid": "AllowAllUsersToListAccounts",
+							"Effect": "Allow",
+							"Action":
+							[
+								"iam:ListAccountAliases",
+								"iam:ListUsers",
+								"iam:GetAccountSummary"
+							],
+
+							"Resource": "*"
+						},
+
+						{
+							"Sid": "AllowIndividualUserToSeeAndManageOnlyTheirOwnAccountInformation",
+							"Effect": "Allow",
+							"Action":
+							[
+								"iam:ChangePassword",
+								"iam:CreateAccessKey",
+								"iam:CreateLoginProfile",
+								"iam:DeleteAccessKey",
+								"iam:DeleteLoginProfile",
+								"iam:GetAccountPasswordPolicy",
+								"iam:GetLoginProfile",
+								"iam:ListAccessKeys",
+								"iam:UpdateAccessKey",
+								"iam:UpdateLoginProfile",
+								"iam:ListSigningCertificates",
+								"iam:DeleteSigningCertificate",
+								"iam:UpdateSigningCertificate",
+								"iam:UploadSigningCertificate",
+								"iam:ListSSHPublicKeys",
+								"iam:GetSSHPublicKey",
+								"iam:DeleteSSHPublicKey",
+								"iam:UpdateSSHPublicKey",
+								"iam:UploadSSHPublicKey"
+							],
+
+							"Resource":
+							{
+								"Fn::Join":
+								[
+									"",
+									[
+										"arn:aws:iam::",
+										{
+											"Ref": "AWS::AccountId"
+										},
+
+										":user/${aws:username}"
+									]
+								]
+							}
+						},
+
+						{
+							"Sid": "AllowIndividualUserToListOnlyTheirOwnMFA",
+							"Effect": "Allow",
+							"Action":
+							[
+								"iam:ListVirtualMFADevices",
+								"iam:ListMFADevices"
+							],
+
+							"Resource":
+							[
+								{
+									"Fn::Join":
+									[
+										"",
+										[
+											"arn:aws:iam::",
+											{
+												"Ref": "AWS::AccountId"
+											},
+
+											":mfa/*"
+										]
+									]
+								},
+
+								{
+									"Fn::Join":
+									[
+										"",
+										[
+											"arn:aws:iam::",
+											{
+												"Ref": "AWS::AccountId"
+											},
+
+											":user/${aws:username}"
+										]
+									]
+								}
+							]
+						},
+
+						{
+							"Sid": "AllowIndividualUserToManageTheirOwnMFA",
+							"Effect": "Allow",
+							"Action":
+							[
+								"iam:CreateVirtualMFADevice",
+								"iam:DeleteVirtualMFADevice",
+								"iam:EnableMFADevice",
+								"iam:ResyncMFADevice"
+							],
+
+							"Resource":
+							[
+								{
+									"Fn::Join":
+									[
+										"",
+										[
+											"arn:aws:iam::",
+											{
+												"Ref": "AWS::AccountId"
+											},
+
+											":mfa/${aws:username}"
+										]
+									]
+								},
+
+								{
+									"Fn::Join":
+									[
+										"",
+										[
+											"arn:aws:iam::",
+											{
+												"Ref": "AWS::AccountId"
+											},
+
+											":user/${aws:username}"
+										]
+									]
+								}
+							]
+						},
+
+						{
+							"Sid": "AllowIndividualUserToDeactivateOnlyTheirOwnMFAOnlyWhenUsingMFA",
+							"Effect": "Allow",
+							"Action":
+							[
+								"iam:DeactivateMFADevice"
+							],
+
+							"Resource":
+							[
+								{
+									"Fn::Join":
+									[
+										"",
+										[
+											"arn:aws:iam::",
+											{
+												"Ref": "AWS::AccountId"
+											},
+
+											":mfa/${aws:username}"
+										]
+									]
+								},
+
+								{
+									"Fn::Join":
+									[
+										"",
+										[
+											"arn:aws:iam::",
+											{
+												"Ref": "AWS::AccountId"
+											},
+
+											":user/${aws:username}"
+										]
+									]
+								}
+							],
+
+							"Condition": 
+							{
+								"Bool":
+								{
+									"aws:MultiFactorAuthPresent": "true"
+								}
+							}
+						},
+
+						{
+							"Sid": "BlockAnyAccessOtherThanAboveUnlessSignedInWithMFA",
+							"Effect": "Deny",
+							"NotAction": "iam:*",
+							"Resource": "*",
+							"Condition":
+							{
+								"BoolIfExists":
+								{
+									"aws:MultiFactorAuthPresent": "false"
+								}
+							}
+						}
+					]
+				},
+
+				"ManagedPolicyName": "TSI_Base_Policy_MFA"
+			},
+
+			"DependsOn":
+			[
+				"GroupPowerUser"
+			]
+		},
+
+		"PermissionBoundaryTSIDeny":
+		{
+			"Type": "AWS::IAM::ManagedPolicy",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"Description":
+				{
+					"Fn::Join":
+					[
+						" ",
+						[
+							"Deny policy PermissionBoundary",
+							{
+								"Ref": "AWS::AccountId"
+							}
+						]
+					]
+				},
+
+				"PolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Sid": "DenyWithoutBoundary",
+							"Effect": "Deny",
+							"Action":
+							[
+								"iam:CreateUser",
+								"iam:CreateRole",
+								"iam:PutUserPermissionsBoundary",
+								"iam:PutRolePermissionsBoundary"
+							],
+
+							"Resource": "*",
+							"Condition":
+							{
+								"ArnNotEquals":
+								{
+									"iam:PermissionsBoundary": "arn:aws:iam::*:policy/TSI_Base_PermissionBoundary"
+								}
+							}
+						},
+
+						{
+							"Action":
+							[
+								"iam:Create*",
+								"iam:Delete*",
+								"iam:Update*",
+								"iam:Attach*",
+								"iam:Detach*",
+								"iam:Put*",
+								"iam:RemoveRoleFromInstanceProfile",
+								"kms:Create*",
+								"kms:Cancel*",
+								"kms:Decrypt*",
+								"kms:Encrypt*",
+								"kms:Delete*",
+								"kms:Disable*",
+								"kms:Enable*",
+								"kms:Generate*",
+								"kms:Import*",
+								"kms:Schedule*",
+								"kms:Tag*",
+								"kms:Untag*",
+								"kms:Update*",
+								"kms:Put*",
+								"kms:Retire*",
+								"kms:Revoke*",
+								"lambda:*",
+								"events:Delete*",
+								"events:Put*",
+								"events:Disable*",
+								"events:Remove*",
+								"cloudtrail:*",
+								"cloudformation:*",
+								"sns:*"
+							],
+
+							"Resource":
+							[
+								"arn:aws:iam::*:policy/TSI_*",
+								"arn:aws:iam::*:group/TSI_*",
+								"arn:aws:iam::*:role/TSI_*",
+								"arn:aws:iam::*:user/TSI_*",
+								"arn:aws:iam::*:role/OrganizationAccountAccessRole",
+								"arn:aws:kms:*:*:alias/TSI_*",
+								"arn:aws:lambda:*:*:function:TSI_*",
+								"arn:aws:events:*:*:rule/TSI_*",
+								"arn:aws:cloudtrail:*:*:trail/TSI_*",
+								"arn:aws:cloudformation:*:*:stack/StackName-*",
+								"arn:aws:sns:*:*:TSI_*"
+							],
+
+							"Effect": "Deny",
+							"Sid": "TSIDeny"
+						},
+
+						{
+							"Action":
+							{
+								"Fn::FindInMap":
+								[
+									"supportmap",
+									"supportenabledglobal",
+									{
+										"Ref": "supportenabled"
+									}
+								]
+							},
+
+							"Resource":
+							[
+								"*"
+							],
+
+							"Effect": "Deny",
+							"Sid": "DenyIAMSupportAccountOrganization"
+						},
+
+						{
+							"Action": { "Fn::FindInMap" : [ "awsconfigmap", "awsconfigenabledglobal", { "Ref" : "awsconfigenabled" }] },
+							"Resource": [
+								"*"
+							],
+							"Effect": "Deny",
+							"Sid": "DenyAWSConfig"
+						},
+
+						{
+							"Action":
+							[
+								"iam:PassRole"
+							],
+
+							"Resource":
+							[
+								"arn:aws:iam::*:role/OrganizationAccountAccessRole",
+								"arn:aws:iam::*:role/TSI_*"
+							],
+
+							"Effect": "Deny",
+							"Sid": "DenyIAMPassRole"
+						},
+
+						{
+							"Sid": "AllowAllOtherServices",
+							"Effect": "Allow",
+							"Action":
+							[
+								"*"
+							],
+
+							"Resource": "*"
+						},
+
+						{
+							"Sid": "DenyNotEnabledRegions",
+							"Effect": "Deny",
+							"NotAction":
+							[
+								"aws-marketplace:*",
+								"aws-portal:*",
+								"awsbillingconsole:*",
+								"iam:*",
+								"sts:*",
+								"health:*",
+								"support:*",
+								"budgets:*",
+								"cloudfront:*",
+								"organizations:*",
+								"trustedadvisor:*",
+								"shield:*",
+								"waf:*",
+								"waf-regional:*",
+								"route53:*",
+								"route53domains:*",
+								"tag:*",
+								"resource-groups:*",
+								"s3:Get*",
+								"s3:List*",
+								"s3:Head*",
+								"glacier:List*",
+								"glacier:Describe*",
+								"glacier:Get*",
+								"lightsail:Get*",
+								"config:*"
+							],
+
+							"Resource": "*",
+							"Condition":
+							{
+								"StringNotEqualsIfExists":
+								{
+									"aws:RequestedRegion":
+									{
+										"Fn::Split":
+										[
+											",",
+											{
+												"Ref": "enabledregions"
+											}
+										]
+									}
+								}
+							}
+						},
+
+						{
+							"Sid": "DenyNotEnabledRegionsforS3",
+							"Effect": "Deny",
+							"Action":
+							[
+								"s3:CreateBucket"
+							],
+
+							"Resource": "*",
+							"Condition":
+							{
+								"StringNotEqualsIfExists":
+								{
+									"s3:LocationConstraint":
+									{
+										"Fn::Split":
+										[
+											",",
+											{
+												"Ref": "enabledregions"
+											}
+										]
+									}
+								}
+							}
+						}
+					]
+				},
+
+				"ManagedPolicyName": "TSI_Base_PermissionBoundary"
+			}
+		},
+
+		"GroupPowerUser":
+		{
+			"Type": "AWS::IAM::Group",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"GroupName": "TSI_Base_Group_PowerUser",
+				"Path": "/",
+				"ManagedPolicyArns":
+				[
+					"arn:aws:iam::aws:policy/AdministratorAccess"
+				]
+			}
+		},
+
+		"tsireadonlyswitchrole":
+		{
+			"Type": "AWS::IAM::Role",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"RoleName": "TSI_Base_ReadOnlySwitchRole",
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"AWS":
+								{
+									"Fn::Sub":
+									[
+										"arn:aws:iam::${rootaccountid}:root",
+										{
+											"rootaccountid":
+											{
+												"Ref": "rootAccountId"
+											}
+										}
+									]
+								}
+							},
+
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+
+				"Path": "/",
+				"ManagedPolicyArns":
+				[
+					"arn:aws:iam::aws:policy/ReadOnlyAccess"
+				]
+			}
+		},
+
+		"s3dpcsecdevopsrole":
+		{
+			"Type": "AWS::IAM::Role",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"AWS":
+								{
+									"Fn::Sub":
+									[
+										"arn:aws:sts::${secdevopsaccountid}:assumed-role/TSI_Base_S3_DPC_Enforcement_role/TSI_Base_S3DPC",
+										{
+											"secdevopsaccountid":
+											{
+												"Ref": "SecDevopsAccountID"
+											}
+										}
+									]
+								}
+							},
+
+							"Action": "sts:AssumeRole",
+							"Condition":
+							{
+
+							}
+						}
+					]
+				},
+
+				"Policies":
+				[
+					{
+						"PolicyName": "TSI_Base_S3_DPC_SecDevOps_Policy",
+						"PolicyDocument":
+						{
+							"Version": "2012-10-17",
+							"Statement":
+							[
+								{
+									"Sid": "VisualEditor0",
+									"Effect": "Allow",
+									"Action":
+									[
+										"s3:ListBucketByTags",
+										"s3:GetLifecycleConfiguration",
+										"s3:GetBucketTagging",
+										"s3:GetInventoryConfiguration",
+										"s3:PutAnalyticsConfiguration",
+										"s3:PutAccelerateConfiguration",
+										"s3:ListBucketVersions",
+										"s3:GetBucketLogging",
+										"s3:GetAccelerateConfiguration",
+										"s3:GetBucketPolicy",
+										"s3:PutBucketTagging",
+										"s3:GetBucketRequestPayment",
+										"s3:PutLifecycleConfiguration",
+										"s3:PutBucketAcl",
+										"s3:GetMetricsConfiguration",
+										"s3:PutBucketVersioning",
+										"s3:GetIpConfiguration",
+										"s3:PutObjectAcl",
+										"s3:ListBucketMultipartUploads",
+										"s3:GetBucketWebsite",
+										"s3:PutMetricsConfiguration",
+										"s3:GetBucketVersioning",
+										"s3:PutBucketCORS",
+										"s3:GetBucketAcl",
+										"s3:GetBucketNotification",
+										"s3:PutInventoryConfiguration",
+										"s3:ListMultipartUploadParts",
+										"s3:PutIpConfiguration",
+										"s3:PutBucketNotification",
+										"s3:PutBucketWebsite",
+										"s3:PutBucketLogging",
+										"s3:PutObjectVersionAcl",
+										"s3:GetBucketCORS",
+										"s3:GetAnalyticsConfiguration",
+										"s3:PutBucketPolicy",
+										"s3:GetBucketLocation",
+										"s3:PutEncryptionConfiguration",
+										"s3:GetEncryptionConfiguration"
+									],
+
+									"Resource": "arn:aws:s3:::*"
+								}
+							]
+						}
+					}
+				],
+
+				"RoleName": "TSI_Base_S3_DPC_SecDevOps_Role"
+			}
+		},
+
+		"tsimanagedservicerole":
+		{
+			"Type": "AWS::IAM::Role",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"AWS":
+								{
+									"Fn::Sub":
+									[
+										"arn:aws:iam::${rootaccountid}:root",
+										{
+											"rootaccountid":
+											{
+												"Ref": "rootAccountId"
+											}
+										}
+									]
+								}
+							},
+
+							"Action": "sts:AssumeRole",
+							"Condition":
+							{
+
+							}
+						}
+					]
+				},
+
+				"RoleName": "TSI_Base_ManagedServices"
+			}
+		},
+
+		"tsi2ndlevelrole":
+		{
+			"Type": "AWS::IAM::Role",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"AWS":
+								{
+									"Fn::Sub":
+									[
+										"arn:aws:iam::${rootaccountid}:root",
+										{
+											"rootaccountid":
+											{
+												"Ref": "rootAccountId"
+											}
+										}
+									]
+								}
+							},
+
+							"Action": "sts:AssumeRole",
+							"Condition":
+							{
+
+							}
+						}
+					]
+				},
+
+				"RoleName": "TSI_Base_2ndLevel_Role",
+				"ManagedPolicyArns":
+				[
+					"arn:aws:iam::aws:policy/job-function/SupportUser"
+				]
+			}
+		},
+
+		"tsibackofficerole":
+		{
+			"Type": "AWS::IAM::Role",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"AWS":
+								{
+									"Fn::Sub":
+									[
+										"arn:aws:iam::${rootaccountid}:root",
+										{
+											"rootaccountid":
+											{
+												"Ref": "rootAccountId"
+											}
+										}
+									]
+								}
+							},
+
+							"Action": "sts:AssumeRole",
+							"Condition":
+							{
+
+							}
+						}
+					]
+				},
+
+				"RoleName": "TSI_Base_BackOffice_Role",
+				"ManagedPolicyArns":
+				[
+					"arn:aws:iam::aws:policy/AWSSupportAccess"
+				]
+			}
+		},
+
+		"cloudwatcheventrole":
+		{
+			"Type": "AWS::IAM::Role",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"Service": "events.amazonaws.com"
+							},
+
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+
+				"Policies":
+				[
+					{
+						"PolicyName": "TSI_Base_EventBus_Policy",
+						"PolicyDocument":
+						{
+							"Version": "2012-10-17",
+							"Statement":
+							[
+								{
+									"Effect": "Allow",
+									"Action":
+									[
+										"events:PutEvents"
+									],
+
+									"Resource":
+									[
+										"arn:aws:events:*:140492085282:event-bus/default"
+									]
+								}
+							]
+						}
+					}
+				],
+
+				"RoleName": "TSI_Base_EventBus_Role"
+			}
+		},
+
+		"TSIBasepacbotrole":
+		{
+			"Type": "AWS::IAM::Role",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"AWS":
+								{
+									"Fn::Sub":
+									[
+										"arn:aws:iam::${secopsaccountid}:root",
+										{
+											"secopsaccountid":
+											{
+												"Ref": "SecDevopsAccountID"
+											}
+										}
+									]
+								}
+							},
+
+							"Action": "sts:AssumeRole",
+							"Condition":
+							{
+
+							}
+						}
+					]
+				},
+
+				"ManagedPolicyArns":
+				[
+					"arn:aws:iam::aws:policy/ReadOnlyAccess",
+					"arn:aws:iam::aws:policy/AmazonGuardDutyReadOnlyAccess",
+					"arn:aws:iam::aws:policy/AWSSupportAccess"
+				],
+
+				"Path": "/",
+				"RoleName": "TSI_Base_pacbot_ro"
+			}
+		},
+
+		"ConfigRecorderRole":{
+			"Type":"AWS::IAM::Role",
+			"Properties":{
+			   "RoleName":"TSI_AWS_configRole",
+			   "AssumeRolePolicyDocument":{
+				  "Version":"2012-10-17",
+				  "Statement":[
+					 {
+						"Effect":"Allow",
+						"Principal":{
+						   "Service":[
+							  "config.amazonaws.com"
+						   ]
+						},
+						"Action":[
+						   "sts:AssumeRole"
+						]
+					 }
+				  ]
+			   },
+			   "Path":"/",
+			   "Policies":[
+				  {
+					 "PolicyName":"CrossAccountBucketPolicy",
+					 "PolicyDocument":{
+						"Version":"2012-10-17",
+						"Statement":[
+						   {
+							  "Sid":"VisualEditor0",
+							  "Effect":"Allow",
+							  "Action":"s3:PutObject*",
+							  "Resource":{
+								 "Fn::Join":[
+									"",
+									[
+									   "arn:aws:s3:::",
+									   {
+										  "Ref":"AWSConfigBucket"
+									   },
+									   "/",
+									   {
+										  "Ref":"AWS::AccountId"
+									   }
+									]
+								 ]
+							  },
+							  "Condition":{
+								 "StringLike":{
+									"s3:x-amz-acl":"bucket-owner-full-control"
+								 }
+							  }
+						   },
+						   {
+							  "Sid":"VisualEditor1",
+							  "Effect":"Allow",
+							  "Action":"s3:GetBucketAcl",
+							  "Resource":{
+								 "Fn::Join":[
+									"",
+									[
+									   "arn:aws:s3:::",
+									   {
+										  "Ref":"AWSConfigBucket"
+									   }
+									]
+								 ]
+							  }
+						   },
+						   {
+							  "Sid":"VisualEditor2",
+							  "Effect":"Allow",
+							  "Action":"sns:*",
+							  "Resource":"*"
+						   }
+						]
+					 }
+				  }
+			   ],
+			   "ManagedPolicyArns":[
+				  "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
+			   ]
+			}
+		 },
+
+		"automationrole":
+		{
+			"Type": "AWS::IAM::Role",
+			"DeletionPolicy": "Retain",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Version": "2012-10-17",
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"AWS":
+								{
+									"Fn::Sub":
+									[
+										"arn:aws:sts::${secdevopsaccountid}:root",
+										{
+											"secdevopsaccountid":
+											{
+												"Ref": "SecDevopsAccountID"
+											}
+										}
+									]
+								}
+							},
+
+							"Action": "sts:AssumeRole",
+							"Condition":
+							{
+
+							}
+						}
+					]
+				},
+
+				"Policies":
+				[
+					{
+						"PolicyName": "TSI_Base_S3_DPC_SecDevOps_Policy",
+						"PolicyDocument":
+						{
+							"Version": "2012-10-17",
+							"Statement":
+							[
+								{
+									"Sid": "VisualEditor0",
+									"Effect": "Allow",
+									"Action":
+									[
+										"s3:ListBucketByTags",
+										"s3:GetLifecycleConfiguration",
+										"s3:GetBucketTagging",
+										"s3:GetInventoryConfiguration",
+										"s3:PutAnalyticsConfiguration",
+										"s3:PutAccelerateConfiguration",
+										"s3:ListBucketVersions",
+										"s3:GetBucketLogging",
+										"s3:GetAccelerateConfiguration",
+										"s3:GetBucketPolicy",
+										"s3:PutBucketTagging",
+										"s3:GetBucketRequestPayment",
+										"s3:PutLifecycleConfiguration",
+										"s3:PutBucketAcl",
+										"s3:GetMetricsConfiguration",
+										"s3:PutBucketVersioning",
+										"s3:GetIpConfiguration",
+										"s3:PutObjectAcl",
+										"s3:ListBucketMultipartUploads",
+										"s3:GetBucketWebsite",
+										"s3:PutMetricsConfiguration",
+										"s3:GetBucketVersioning",
+										"s3:PutBucketCORS",
+										"s3:GetBucketAcl",
+										"s3:GetBucketNotification",
+										"s3:PutInventoryConfiguration",
+										"s3:ListMultipartUploadParts",
+										"s3:PutIpConfiguration",
+										"s3:PutBucketNotification",
+										"s3:PutBucketWebsite",
+										"s3:PutBucketLogging",
+										"s3:PutObjectVersionAcl",
+										"s3:GetBucketCORS",
+										"s3:GetAnalyticsConfiguration",
+										"s3:PutBucketPolicy",
+										"s3:GetBucketLocation",
+										"s3:PutEncryptionConfiguration",
+										"s3:GetEncryptionConfiguration"
+									],
+
+									"Resource": "arn:aws:s3:::*"
+								}
+							]
+						}
+					},
+
+					{
+						"PolicyName": "TSI_Base_VPC_Flowlog",
+						"PolicyDocument":
+						{
+							"Version": "2012-10-17",
+							"Statement":
+							[
+								{
+									"Sid": "VisualEditor0",
+									"Effect": "Allow",
+									"Action":
+									[
+										"ec2:DeleteTags",
+										"ec2:CreateTags"
+									],
+
+									"Resource": "arn:aws:ec2:*:*:vpc/*"
+								},
+
+								{
+									"Sid": "VisualEditor1",
+									"Effect": "Allow",
+									"Action":
+									[
+										"logs:CreateLogDelivery",
+										"ec2:CreateFlowLogs",
+										"ec2:DescribeVpcs",
+										"ec2:DescribeFlowLogs"
+									],
+
+									"Resource": "*"
+								}
+							]
+						}
+					}
+				],
+
+				"RoleName": "TSI_Base_Automation"
+			}
+		}
+	}
+}

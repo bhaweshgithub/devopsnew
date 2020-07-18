@@ -1,0 +1,105 @@
+$ aws codepipeline get-pipeline --name Develop-CodePipeline
+{
+    "pipeline": {
+        "name": "Develop-CodePipeline",
+        "roleArn": "arn:aws:iam::297193019640:role/PIPELINEDEV_eu-central-1_ServiceRoleForCodePipeline",
+        "artifactStore": {
+            "type": "S3",
+            "location": "297193019640-pipeline"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "S3",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "PollForSourceChanges": "false",
+                            "S3Bucket": "git-to-amazon-s3-outputbucket-1gk8h56mkdvm0",
+                            "S3ObjectKey": "virago_ViragoProject.zip"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Test",
+                "actions": [
+                    {
+                        "name": "TeststageBuild",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "DevelopCPTestBuild"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "devpipelinetestbuild"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "TeststageTest",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "FunctionName": "codepipeline-develop-teststage-test",
+                            "UserParameters": "{\"branch\":\"develop\", \"policies\": {\"POWERFUL_ACTIONS\":\"1\"}}"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    },
+                    {
+                        "name": "TeststageCleanup",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 3,
+                        "configuration": {
+                            "FunctionName": "codepipeline-anybranch-anystage-anyaction-dummyok",
+                            "UserParameters": "{\"stack\":\"virago-codepipeline-teststage-testpolicies\",\"artifact\":\"devpipelinetestbuild\",\"file\":\"test/sam/packaged.yaml\"}"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            }
+        ],
+        "version": 21
+    },
+    "metadata": {
+        "pipelineArn": "arn:aws:codepipeline:eu-central-1:297193019640:Develop-CodePipeline",
+        "created": 1537118180.633,
+        "updated": 1539862181.27
+    }
+}

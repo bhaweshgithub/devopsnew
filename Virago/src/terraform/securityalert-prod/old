@@ -1,0 +1,105 @@
+resource "aws_cloudwatch_event_rule" "rulefailed" {
+  name        = "TSI_Base_CW_Rule_IAM_FailedLogin"
+  description = "logs each events where an unsuccessful login was detected"
+
+  event_pattern = <<PATTERN
+{
+  "detail-type": [
+    "AWS API Call via CloudTrail",
+    "AWS Console Sign In via CloudTrail"
+  ],
+  "detail": {
+    "responseElements": {
+      "ConsoleLogin": [
+        "Failure"
+      ]
+    }
+  }
+}
+PATTERN
+}
+
+resource "aws_cloudwatch_event_rule" "ruleroot" {
+  name        = "TSI_Base_CW_Rule_Root_Login"
+  description = ""
+
+  event_pattern = <<PATTERN
+{
+  "detail-type": [
+    "AWS API Call via CloudTrail",
+    "AWS Console Sign In via CloudTrail"
+  ],
+  "detail": {
+    "userIdentity": {
+      "Type": [
+        "Root"
+      ]
+    }
+  }
+}
+PATTERN
+}
+
+resource "aws_cloudwatch_event_target" "rulefailedsns" {
+  rule      = "${aws_cloudwatch_event_rule.rulefailed.name}"
+  target_id = "tsi_base_failedlogin"
+  arn       = "${aws_sns_topic.snstopic.arn}"
+}
+
+resource "aws_cloudwatch_event_target" "rulerootsns" {
+  rule      = "${aws_cloudwatch_event_rule.ruleroot.name}"
+  target_id = "tsi_base_rootlogin"
+  arn       = "${aws_sns_topic.snstopic.arn}"
+}
+
+resource "aws_sns_topic" "snstopic" {
+  name = "TSI_Base_Security_Incident"
+  display_name = "Login"
+}
+
+resource "aws_sns_topic_policy" "default" {
+  arn    = "${aws_sns_topic.snstopic.arn}"
+  policy = "${data.aws_iam_policy_document.sns_topic_policy.json}"
+}
+
+data "aws_iam_policy_document" "sns_topic_policy" {
+policy_id = "__default_policy_ID"
+  statement {
+    sid = "__default_statement_ID"
+    effect  = "Allow"
+    actions = ["SNS:GetTopicAttributes",
+        "SNS:SetTopicAttributes",
+        "SNS:AddPermission",
+        "SNS:RemovePermission",
+        "SNS:DeleteTopic",
+        "SNS:Subscribe",
+        "SNS:ListSubscriptionsByTopic",
+        "SNS:Publish",
+        "SNS:Receive"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+
+    resources = ["${aws_sns_topic.snstopic.arn}"]
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceOwner"
+
+      values = [
+        "${var.accountId}",
+      ]
+    }
+  }
+  statement {
+   sid = "AWSSNSlogin"
+   effect = "Allow"
+   actions = ["SNS:Publish"]
+   resources = ["${aws_sns_topic.snstopic.arn}"]
+   principals {
+	type = "Service"
+	identifiers = ["events.amazonaws.com"]
+	}
+}
+}

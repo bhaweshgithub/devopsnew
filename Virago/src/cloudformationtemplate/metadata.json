@@ -1,0 +1,14 @@
+{
+	"CFTemplates": 
+	[
+		{
+			"source": "Baseline.json",
+			"region" :"eu-central-1"
+		},
+
+		{
+			"source": "SecurityAlert.json",
+			"region" :"eu-central-1"
+		}
+		]
+}

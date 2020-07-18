@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    StageDummyOk Function
+
+    A lambda which returns 'Job succeeded'
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+    Function:
+        Timeout: 3
+
+
+Resources:
+
+    StageDummyOkFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        DependsOn:
+        - CodePipelineLambdaRole
+        - LambdaCodePipelineExecutionPolicy
+        Properties:
+            FunctionName: "codepipeline-anybranch-anystage-anyaction-dummyok"
+            CodeUri: ../build/
+            Handler: stage-dummy-ok.lambda_handler
+            Runtime: python3.6
+            Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+                Variables:
+                    PARAM1: VALUE
+            Events:
+                HelloWorld:
+                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+                    Properties:
+                        Path: /run
+                        Method: get
+
+    LambdaCodePipelineExecutionPolicy:
+        DependsOn:
+        - CodePipelineLambdaRole
+        Type: AWS::IAM::Policy
+        Properties:
+          PolicyName: LambdaRolePolicy
+          Roles:
+          - Ref: CodePipelineLambdaRole
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - logs:*
+              Resource:
+              - arn:aws:logs:*:*:*
+            - Effect: Allow
+              Action:
+              - codepipeline:PutJobSuccessResult
+              - codepipeline:PutJobFailureResult
+              Resource:
+              - "*"
+
+    CodePipelineLambdaRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                - lambda.amazonaws.com
+              Action:
+              - sts:AssumeRole
+          Path: "/"
+
+Outputs:
+
+    StageDummyOkApi:
+      Description: "API Gateway endpoint URL for Prod stage for Stage Dummy OK function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/run/"
+
+    StageDummyOkFunction:
+      Description: "Stage Dummy OK Lambda Function ARN"
+      Value: !GetAtt StageDummyOkFunction.Arn
+
+    StageDummyOkFunctionIamRole:
+      Description: "Implicit IAM Role created for Stage Dummy OK function"
+      Value: !GetAtt StageDummyOkFunction.Arn

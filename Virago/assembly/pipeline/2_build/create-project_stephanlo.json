@@ -1,0 +1,27 @@
+{
+  "name": "StephanLo_Pipeline_Build_Stage",
+  "source": {
+    "type": "S3",
+    "location": "arn:aws:s3:::git-to-amazon-s3-outputbucket-1gk8h56mkdvm0/virago/ViragoProject/virago_ViragoProject_Development.zip",
+    "buildspec": "assembly/build/buildspec.build.yml",
+    "insecureSsl": false
+  },
+  "artifacts": {
+    "type": "NO_ARTIFACTS"
+  },
+  "cache": {
+    "type": "NO_CACHE"
+  },
+  "environment": {
+    "type": "LINUX_CONTAINER",
+    "image": "aws/codebuild/docker:17.09.0",
+    "computeType": "BUILD_GENERAL1_SMALL",
+    "environmentVariables": [],
+    "privilegedMode": true
+  },
+  "serviceRole": "arn:aws:iam::297193019640:role/service-role/codebuild-Virago_Pipeline_Build_Stage-service-role",
+  "timeoutInMinutes": 60,
+  "encryptionKey": "arn:aws:kms:eu-central-1:297193019640:alias/aws/s3",
+  "tags": [],
+  "badgeEnabled": false
+}

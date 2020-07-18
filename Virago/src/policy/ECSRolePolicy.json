@@ -1,0 +1,11 @@
+{
+"Version": "2012-10-17",
+"Statement": [
+{ "Sid": "VisualEditor0", "Effect": "Allow", "Action": [ "kms:Decrypt", "kms:ListKeyPolicies", "states:ListActivities", "kms:ListRetirableGrants", "s3:ListJobs", "kms:GetKeyPolicy", "kms:ListResourceTags", "kms:ReEncryptFrom", "kms:ListGrants", "kms:GetParametersForImport", "states:SendTaskSuccess", "kms:ListKeys", "states:SendTaskFailure", "s3:GetAccountPublicAccessBlock", "kms:GetKeyRotationStatus", "kms:Encrypt", "sts:DecodeAuthorizationMessage", "kms:ListAliases", "kms:GenerateDataKey", "kms:ReEncryptTo", "kms:DescribeKey", "sts:GetCallerIdentity", "s3:HeadBucket", "states:SendTaskHeartbeat" ], "Resource": "*" }
+,
+{ "Sid": "VisualEditor1", "Effect": "Allow", "Action": [ "s3:ListBucketByTags", "s3:GetLifecycleConfiguration", "s3:GetBucketTagging", "s3:GetInventoryConfiguration", "s3:DeleteObjectVersion", "s3:GetObjectVersionTagging", "s3:ListBucketVersions", "s3:GetBucketLogging", "s3:ListBucket", "s3:GetAccelerateConfiguration", "s3:GetBucketPolicy", "s3:GetObjectVersionTorrent", "s3:GetObjectAcl", "s3:GetEncryptionConfiguration", "s3:GetBucketRequestPayment", "s3:GetObjectVersionAcl", "s3:GetObjectTagging", "s3:GetMetricsConfiguration", "s3:DeleteObject", "s3:GetBucketPublicAccessBlock", "s3:GetBucketPolicyStatus", "s3:ListBucketMultipartUploads", "states:DescribeActivity", "s3:GetBucketWebsite", "s3:GetBucketVersioning", "s3:GetBucketAcl", "s3:GetBucketNotification", "s3:GetReplicationConfiguration", "s3:ListMultipartUploadParts", "s3:PutObject", "s3:GetObject", "s3:GetObjectTorrent", "s3:DescribeJob", "s3:GetBucketCORS", "s3:GetAnalyticsConfiguration", "s3:GetObjectVersionForReplication", "s3:GetBucketLocation", "states:GetActivityTask", "s3:GetObjectVersion" ], "Resource": [ "arn:aws:states:*:*:activity:*", "arn:aws:s3:::a11336167-confidential", "arn:aws:s3:*:*:job/*", "arn:aws:s3:::a11336167-confidential/*" ] }
+,
+
+{ "Sid": "VisualEditor2", "Effect": "Allow", "Action": "sts:*", "Resource": "arn:aws:iam::*:role/TSI_Base_FullAccess" }
+]
+}

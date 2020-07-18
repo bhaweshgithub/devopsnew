@@ -1,0 +1,64 @@
+{
+  "object_kind": "push",
+  "event_name": "push",
+  "before": "b0ea279128f8eac1dcf0d200214d650334f55bc5",
+  "after": "b0ea279128f8eac1dcf0d200214d650334f55bc5",
+  "ref": "refs/heads/master",
+  "checkout_sha": "b0ea279128f8eac1dcf0d200214d650334f55bc5",
+  "message": null,
+  "user_id": 1266,
+  "user_name": "Stephan Lo",
+  "user_username": "stlo",
+  "user_email": "stephan.lo@t-systems.com",
+  "user_avatar": null,
+  "project_id": 2247,
+  "project": {
+    "id": 2247,
+    "name": "gitlabAWS",
+    "description": "",
+    "web_url": "https://dol.telekom.de/gitlab/stlo/gitlabAWS",
+    "avatar_url": null,
+    "git_ssh_url": "git@dol.telekom.de:stlo/gitlabAWS.git",
+    "git_http_url": "https://dol.telekom.de/gitlab/stlo/gitlabAWS.git",
+    "namespace": "stlo",
+    "visibility_level": 10,
+    "path_with_namespace": "stlo/gitlabAWS",
+    "default_branch": "master",
+    "ci_config_path": null,
+    "homepage": "https://dol.telekom.de/gitlab/stlo/gitlabAWS",
+    "url": "git@dol.telekom.de:stlo/gitlabAWS.git",
+    "ssh_url": "git@dol.telekom.de:stlo/gitlabAWS.git",
+    "http_url": "https://dol.telekom.de/gitlab/stlo/gitlabAWS.git"
+  },
+  "commits": [
+    {
+      "id": "b0ea279128f8eac1dcf0d200214d650334f55bc5",
+      "message": "Add new file",
+      "timestamp": "2018-08-29T10:39:48Z",
+      "url": "https://dol.telekom.de/gitlab/stlo/gitlabAWS/commit/b0ea279128f8eac1dcf0d200214d650334f55bc5",
+      "author": {
+        "name": "Stephan Lo",
+        "email": "stephan.lo@t-systems.com"
+      },
+      "added": [
+        "README.md"
+      ],
+      "modified": [
+
+      ],
+      "removed": [
+
+      ]
+    }
+  ],
+  "total_commits_count": 1,
+  "repository": {
+    "name": "gitlabAWS",
+    "url": "git@dol.telekom.de:stlo/gitlabAWS.git",
+    "description": "",
+    "homepage": "https://dol.telekom.de/gitlab/stlo/gitlabAWS",
+    "git_http_url": "https://dol.telekom.de/gitlab/stlo/gitlabAWS.git",
+    "git_ssh_url": "git@dol.telekom.de:stlo/gitlabAWS.git",
+    "visibility_level": 10
+  }
+}

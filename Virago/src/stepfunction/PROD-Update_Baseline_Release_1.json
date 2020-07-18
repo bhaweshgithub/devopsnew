@@ -1,0 +1,36 @@
+{
+    "Comment": "A state machine that submits a Job to AWS Batch and monitors the Job until it completes.",
+    "StartAt": "Send guard duty invite",
+    "States": {
+        "Send guard duty invite": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:sendMasterGuardDutyInvite-_BRANCHNAME_",
+            "Next": "Wait for send invite",
+            "ResultPath": "$.guarddutyinvite"
+        },
+        "Wait for send invite": {
+            "Type": "Wait",
+            "Seconds": 20,
+            "Next": "Enable guard duty invite"
+        },
+        "Enable guard duty invite": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:enableMemberGuardDuty-_BRANCHNAME_",
+            "Next": "Wait X Seconds",
+            "ResultPath": "$.guarddutyenable"
+        },
+        "Wait X Seconds": {
+            "Type": "Wait",
+            "Seconds": 50,
+            "Next": "Override Security Stackset Params"
+        },
+        "Override Security Stackset Params": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:overrideSecurityStacksetParams-_BRANCHNAME_",
+            "End": true
+        }
+    }
+}

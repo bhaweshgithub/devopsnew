@@ -1,0 +1,95 @@
+{
+ "StartAt": "Check MFA enabled - 1",
+    "States": {
+        "Check MFA enabled - 1": {
+            "Type": "Task",
+            "InputPath": "$",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:checkRootMFA-_BRANCHNAME_",
+            "Next": "MFA enabled at start?",
+            "ResultPath": "$.mfaresponse"
+        },
+    "MFA enabled at start?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.mfaresponse.iamresponse.SummaryMap.AccountMFAEnabled",
+                    "NumericEquals": 0,
+                    "Next": "Send email for MFA check"
+                },
+                {
+                    "Variable": "$.mfaresponse.iamresponse.SummaryMap.AccountMFAEnabled",
+                    "NumericEquals": 1,
+                    "Next": "Create Admin User"
+                }
+            ],
+            "Default": "Job Failed"
+        },
+    "Send email for MFA check": {
+            "Type": "Task",
+            "InputPath": "$",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:sendMFAcheckEmail-_BRANCHNAME_",
+            "Next": "Check MFA enabled",
+            "ResultPath": "$.mfaemail"
+        },
+    "Check MFA enabled": {
+            "Type": "Task",
+            "InputPath": "$",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:checkRootMFA-_BRANCHNAME_",
+            "Next": "Threshold Reached?",
+            "ResultPath": "$.mfaresponse"
+        },
+    "Threshold Reached?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.mfaresponse.counter",
+                    "NumericLessThanEquals": 96,
+                    "Next": "MFA enabled?"
+                }
+            ],
+            "Default": "Job Failed"
+        },
+    "MFA enabled?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.mfaresponse.iamresponse.SummaryMap.AccountMFAEnabled",
+                    "NumericEquals": 0,
+                    "Next": "Wait for MFA"
+                },
+                {
+                    "Variable": "$.mfaresponse.iamresponse.SummaryMap.AccountMFAEnabled",
+                    "NumericEquals": 1,
+                    "Next": "Create Admin User"
+                }
+            ],
+            "Default": "Job Failed"
+        },
+    "Wait for MFA": {
+            "Type": "Wait",
+            "Seconds": 3600,
+            "Next": "Check MFA enabled"
+        },
+    "Job Failed": {
+            "Type": "Fail",
+            "Cause": "Returned fail",
+            "Error": "DescribeJob returned FAILED"
+        },
+     "Create Admin User": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createAdminUser-_BRANCHNAME_",
+            "Next": "User Guide",
+            "ResultPath": "$.AdminUser"
+        },
+        "User Guide":{
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:userGuide-_BRANCHNAME_",
+            "Next": "Job finished"
+        },
+        "Job finished": {
+            "Type": "Succeed"
+        }
+  }
+}

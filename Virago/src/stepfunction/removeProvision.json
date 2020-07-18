@@ -1,0 +1,67 @@
+{
+  "StartAt": "Manage ECS task",
+  "States": {
+    "Manage ECS task": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::ecs:runTask.waitForTaskToken",
+            "ResultPath": "$.terraform",
+            "Parameters": {
+                "LaunchType": "FARGATE",
+                "Cluster": "arn:aws:ecs:eu-central-1:_ACCOUNTID_:cluster/provisioncluster",
+                "TaskDefinition": "provision",
+                "NetworkConfiguration": {
+                    "AwsvpcConfiguration": {
+                        "Subnets": [
+                            "subnet-08775232140992cbf",
+                            "subnet-08284e208075c4732"
+                        ],
+                        "AssignPublicIp": "ENABLED"
+                    }
+                },
+                "Overrides": {
+                    "ContainerOverrides": [
+                        {
+                            "Name": "provisioncontainer",
+                            "Environment": [
+                                {
+                                    "Name": "taskToken",
+                                    "Value.$": "$$.Task.Token"
+                                },
+                                {
+                                    "Name": "accountId",
+                                    "Value.$": "$.accountId"
+                                },
+                                {
+                                    "Name": "email",
+                                    "Value.$": "$.email"
+                                },
+                                {
+                                    "Name": "description",
+                                    "Value.$": "$.description"
+                                },
+                                {
+                                    "Name": "terraformversion",
+                                    "Value.$": "$.terraformversion"
+                                },
+                                {
+                                    "Name": "terraformbucket",
+                                    "Value.$": "$.terraformbucket"
+                                },
+                                {
+                                    "Name": "action",
+                                    "Value.$": "$.action"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "Next": "HelloWorld"
+        },
+    "HelloWorld": {
+      "Type": "Pass",
+      "Result": "Hello World!",
+      "End": true
+    }
+  }
+}

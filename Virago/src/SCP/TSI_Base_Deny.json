@@ -1,0 +1,82 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "iam:Create*",
+                "iam:Delete*",
+                "iam:Update*",
+                "iam:Attach*",
+                "iam:Detach*",
+                "iam:Put*",
+                "iam:RemoveRoleFromInstanceProfile",
+                "kms:Create*",
+                "kms:Cancel*",
+                "kms:Decrypt*",
+                "kms:Encrypt*",
+                "kms:Delete*",
+                "kms:Disable*",
+                "kms:Enable*",
+                "kms:Generate*",
+                "kms:Import*",
+                "kms:Schedule*",
+                "kms:Tag*",
+                "kms:Untag*",
+                "kms:Update*",
+                "kms:Put*",
+                "kms:Retire*",
+                "kms:Revoke*",
+                "lambda:*",
+                "events:Delete*",
+                "events:Put*",
+                "events:Disable*",
+                "events:Remove*",
+                "cloudtrail:*",
+                "cloudformation:*",
+                "sns:*"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:policy/TSI_*",
+                "arn:aws:iam::*:group/TSI_*",
+                "arn:aws:iam::*:role/TSI_*",
+                "arn:aws:iam::*:user/TSI_*",
+                "arn:aws:iam::*:role/OrganizationAccountAccessRole",
+                "arn:aws:kms:*:*:alias/TSI_*",
+                "arn:aws:lambda:*:*:function:TSI_*",
+                "arn:aws:events:*:*:rule/TSI_*",
+                "arn:aws:cloudtrail:*:*:trail/TSI_*",
+                "arn:aws:cloudformation:*:*:stack/StackSet-Baseline-*",
+                "arn:aws:sns:*:*:TSI_*"
+            ],
+            "Condition": {
+                "StringNotLike": {
+                    "aws:PrincipalARN": "arn:aws:iam::*:role/TSI_*"
+                }
+            },
+            "Effect": "Deny",
+            "Sid": "TSIDeny"
+        },
+        {
+            "Action": [
+                "iam:PassRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:role/OrganizationAccountAccessRole",
+                "arn:aws:iam::*:role/TSI_*"
+            ],
+            "Effect": "Deny",
+            "Sid": "DenyIAMPassRole",
+            "Condition": {
+                "StringNotLike": {
+                    "aws:PrincipalARN": "arn:aws:iam::*:role/TSI_*"
+                }
+            }
+        },
+	{
+                    "Sid": "DenyTSICloudformation",
+                    "Action": "cloudformation:*",
+                    "Effect": "Deny",
+                    "Resource": ["arn:aws:cloudformation:*:*:*/TSI-*", "arn:aws:cloudformation:*:*:*/TSI_*"]
+        }
+    ]
+}

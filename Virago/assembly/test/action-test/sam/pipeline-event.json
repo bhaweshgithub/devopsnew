@@ -1,0 +1,33 @@
+{
+    "CodePipeline.job": {
+        "id": "8eee7bf4-23ca-4f27-84d5-48a9e391b20b",
+        "accountId": "297193019640",
+        "data": {
+            "actionConfiguration": {
+                "configuration": {
+                    "FunctionName": "develop-codepipeline-teststage-deploytests",
+                    "UserParameters": "{\"policies\": {\"POWERFUL_ACTIONS\": \"1\"}, \"branch\": \"develop\", \"stack\":\"codepipeline-develop-teststage-test-policies\",\"artifact\":\"devpipelinetestbuild\",\"file\":\"test/sam/packaged.yaml\"}"
+                }
+            },
+            "inputArtifacts": [
+                {
+                    "location": {
+                        "type": "S3",
+                        "s3Location": {
+                            "objectKey": "Develop-CodePipeline/devpipelin/Q4UvrjV",
+                            "bucketName": "297193019640-pipeline"
+                        }
+                    },
+                    "revision": "None",
+                    "name": "devpipelinetestbuild"
+                }
+            ],
+            "outputArtifacts": [],
+            "artifactCredentials": {
+                "sessionToken": "AgoGb3JpZ2luEAYaDGV1LWNlbnRyYWwtMSKAAiZYFoSw/I0JsZrQ/NEyNBTm023VE3x6I4GuJf0YhHA4GnH7NcSXsRmscNj7zpwTiOsa8+s8fJ66edD7DWl1jsZeuFCbLKPHHLb2PpiKU9uwVAjE2Gw1cMU9i4O9gOSB6SiJs50RzxMPLUN8aPEsqhNdLN1y1SjEor2JgTmDzddc/SwCNvlhpGhgahsabTDWHDcphQElkRVqcNs/9P3eDCtMVYKiPsop7eFc5PDKtbIoVBAVe2I6ifPFh9F/TtRkBbOOK+749+vDmSDCHwmWM7KXHqMu+Mgtjm1yzCpBz9b0rYvAtA8SAT4pCw/lo69QENCOP53Xxtr7RPuwOl6YPV8qhwUISxABGgwyOTcxOTMwMTk2NDAiDLv6d3ngXGVctuTgxirkBJgZv1cWbA0tOxJfkPKPuVf0yJ8VnNJwoVt1/d0ZvuzIByGmbhAE4YQw4sn9NLsy2FYjgGCas8AAlgjLC8eAS4DBDv5OTXOM2IOt1CELk5Jtw/QIBIzKYdZVM6zCi59js2rGUuzcqztIQtrKTr47r3v9wWove/IekznWq2jRTm8YxYoCrk3G703s3vd2Qo1+USihabxa+pAB2A6aGcFXPqJ7b2OqdodRlVaRm/DioTWmK5g8FDXKtObbzpICney2wjkW0D158LwOKVKfl4aCnRe2cg7PFdqpZhXE3tFfikiY+yNncQAuxzuGHyC7sNIEIQ7AKt8SyNlq6FvgF/1Sc8MJFvQJf4bfL51r1eHpOfEVeehGUBBHQ6V0dutFz+C8hj0ugxH4DrYAjirYBEQLkbjHR3L+bXjlcdZxbHTf9g3u+HPRz0OuX5U4aDMspTAZLbA9eD0DVszrZs5PsAmokcf3URENlc/LHh2OzI1rp9Pnj6+uEYY+ic0SJxQbn+G/02Cw/wW+xVnQ2UhNGWR0d3fsjmWeXJU+LYGMf6l6rhMvHo08u6ecknvGGI9DrNX2bu6+2Y2MRj4BLCTnR6x+Iz7bjNjpzJHohPt7/dLeC0D7ThD3YDXhXKipSSw2c77zwvswR8bnk/tmVt39PS8hcjg4zoOsXdHROGasEI50Th8+XubG8AwhllA2DcmHfHVU3aZx83GlSDOOvygdO5KEh8QRSd3Bl6z/2BEwm5+Tgi0H6W6NJoyJRDi/pAI0nzRnBM1XqT6zdKlOe12ejTOHAzIoYmFOR2SE1vw/yUuy5o6Sl2xiGzC6p8TdBQ==",
+                "secretAccessKey": "Qs4HjqyJBmpyldJMZYJaZ3bTYbCY4eaYe20lI0ix",
+                "accessKeyId": "ASIAUKMQVTD4NMHQ55WR"
+            }
+        }
+    }
+}

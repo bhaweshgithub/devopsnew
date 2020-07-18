@@ -1,0 +1,87 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "DenyNotEnabledRegions",
+            "Effect": "Deny",
+            "NotAction": [
+                "aws-marketplace:*",
+                "aws-portal:*",
+                "iam:*",
+                "sts:*",
+                "health:*",
+                "support:*",
+                "budgets:*",
+                "cloudfront:*",
+                "organizations:*",
+                "trustedadvisor:*",
+                "shield:*",
+                "waf:*",
+                "waf-regional:*",
+                "route53:*",
+                "route53domains:*",
+                "tag:*",
+                "resource-groups:*",
+                "s3:Get*",
+                "s3:List*",
+                "s3:Head*",
+                "glacier:List*",
+                "glacier:Describe*",
+                "glacier:Get*",
+                "lightsail:Get*",
+                "guardduty:*"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Condition": {
+                "StringNotLike": {
+                    "aws:PrincipalARN": [
+                        "arn:aws:iam::*:role/TSI_*"
+                    ]
+                },
+                "StringNotEqualsIfExists": {
+                    "aws:RequestedRegion": [
+                        "eu-central-1",
+                        "eu-west-1"
+                    ]
+                }
+            }
+        },
+	{
+            "Sid": "Support",
+            "Effect": "Deny",
+            "Action": [
+                "support:*"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Condition": {
+                "StringNotLike": {
+                    "aws:PrincipalARN": "arn:aws:iam::*:role/TSI_*"
+                }
+            }
+        },
+	{
+            "Action": [
+                "config:DeleteDeliveryChannel",
+                "config:PutDeliveryChannel",
+                "config:DeleteConfigurationRecorder",
+                "config:PutConfigurationRecorder",
+                "config:StartConfigurationRecorder",
+                "config:StopConfigurationRecorder"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Effect": "Deny",
+            "Sid": "DenyConfigDeliveries",
+            "Condition": {
+                "StringNotLike": {
+                    "aws:PrincipalARN": "arn:aws:iam::*:role/TSI_*"
+                }
+            }
+        }
+    ]
+}

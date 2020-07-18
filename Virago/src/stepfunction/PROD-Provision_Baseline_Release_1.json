@@ -1,0 +1,137 @@
+{
+    "Comment": "A state machine that submits a Job to AWS Batch and monitors the Job until it completes.",
+    "StartAt": "Send guard duty invite",
+    "States": {
+        "Send guard duty invite": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:sendMasterGuardDutyInvite-_BRANCHNAME_",
+            "Next": "Wait for send invite",
+            "ResultPath": "$.guardduty"
+        },
+        "Wait for send invite": {
+            "Type": "Wait",
+            "Seconds": 20,
+            "Next": "Add account to Pacbot scan"
+        },
+        "Add account to Pacbot scan": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:addPacbotAccounttoScan-_BRANCHNAME_",
+            "Next": "Enable guard duty invite",
+            "ResultPath": "$.guardduty"
+        },
+        "Enable guard duty invite": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:enableMemberGuardDuty-_BRANCHNAME_",
+            "Next": "Create Password Policy",
+            "ResultPath": "$.guardduty"
+        },
+        "Create Password Policy": {
+            "Type": "Task",
+            "InputPath": "$",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createPasswordPolicy-_BRANCHNAME_",
+            "Next": "Manage ECS task",
+            "ResultPath": "$.passwordpolicy"
+        },
+        "Manage ECS task":{ 
+            "Type":"Task",
+            "Resource":"arn:aws:states:::ecs:runTask.waitForTaskToken",
+            "ResultPath" : "$.terraform",
+            "Parameters":{ 
+               "LaunchType":"FARGATE",
+               "Cluster":"arn:aws:ecs:eu-central-1:_ACCOUNTID_:cluster/provisioncluster",
+               "TaskDefinition":"provision",
+              "NetworkConfiguration" : {"AwsvpcConfiguration" : {
+       "Subnets": ["_SUBNETA_", "_SUBNETB_"],
+       "AssignPublicIp": "ENABLED" } },
+               "Overrides":{ 
+                  "ContainerOverrides":[
+                     {  
+                       "Name":"provisioncontainer",
+                        "Environment":[ 
+                           { 
+                              "Name":"taskToken",
+                              "Value.$":"$$.Task.Token"
+                           },
+                          {   "Name" : "accountId",
+                             "Value.$": "$.accountId"
+                          },
+                          {   "Name" : "email",
+                             "Value.$": "$.email"
+                          },
+                          {   "Name" : "description",
+                             "Value.$": "$.description"
+                          },
+			  {   "Name" : "terraformversion",
+                             "Value.$": "$.terraformversion"
+                          },
+    			  {   "Name" : "terraformbucket",
+                             "Value.$": "$.terraformbucket"
+                          },
+			  {   "Name" : "action",
+                             "Value.$": "$.action"
+                          }                       
+                        ]
+                     }
+                  ]
+               }
+            },
+            "Next": "Create SSM Role"
+         },
+        "Create SSM Role": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createSSMRole-_BRANCHNAME_",
+            "Next": "Delete Default VPCs",
+            "ResultPath": "$.AdminUser"
+        },
+        "Delete Default VPCs": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:deleteDefaultVPC-_BRANCHNAME_",
+            "Next": "Create KMS encryption keys",
+            "ResultPath": "$.defaultVPCs"
+        },
+        "Create KMS encryption keys": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:createEncryptionKeys-_BRANCHNAME_",
+            "Next": "Create S3 DPC rules",
+            "ResultPath": "$.kmskey"
+        },
+        "Create S3 DPC rules": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:addS3RulesOnCustomerAccount-_BRANCHNAME_",
+            "Next": "Add entry to accounts table",
+            "ResultPath": "$.s3dpc"
+        },
+         "Add entry to accounts table": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:addAccountDynamoDB-_BRANCHNAME_",
+            "Next": "Send Mail to SDM CloudChkr",
+            "ResultPath": "$.s3accounts"
+        },
+        "Send Mail to SDM CloudChkr": {
+            "InputPath": "$",
+	    "ResultPath" : "$.cloudcheckr",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:sendMailCloudChkrIntegration-_BRANCHNAME_",
+            "Next": "explicit wait"
+        },
+        "explicit wait": {
+            "Type": "Wait",
+            "Seconds": 50,
+            "Next": "Job finished"
+        },
+        "Job finished": {
+            "InputPath": "$",
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:eu-central-1:_ACCOUNTID_:function:runCheckRootMFA-_BRANCHNAME_",
+            "End": true
+        }
+    }
+}

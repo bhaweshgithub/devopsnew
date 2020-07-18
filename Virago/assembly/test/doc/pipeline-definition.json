@@ -1,0 +1,122 @@
+{
+    "pipeline": {
+        "name": "Develop-CodePipeline",
+        "roleArn": "arn:aws:iam::297193019640:role/PIPELINEDEV_eu-central-1_ServiceRoleForCodePipeline",
+        "artifactStore": {
+            "type": "S3",
+            "location": "297193019640-pipeline"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "S3",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "PollForSourceChanges": "false",
+                            "S3Bucket": "git-to-amazon-s3-outputbucket-1gk8h56mkdvm0",
+                            "S3ObjectKey": "virago_ViragoProject.zip"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Test",
+                "actions": [
+                    {
+                        "name": "PackageTestSources",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "DevelopCPTestBuild"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "devpipelinetestbuild"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "viragobuildsource"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "DeployTestApplication",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "FunctionName": "StageDummyOkFunction-StageDummyOkFunction-1XXW6BJ3Q6LWR",
+                            "UserParameters": "{\"stack\": \"virago-codepipeline-teststage-testpolicies\", \"artifact\": \"samtemplate\", \"file\": packaged.yaml\"}"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "devpipelinetestbuild"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "TestPolicies",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 3,
+                        "configuration": {
+                            "FunctionName": "StageDummyOkFunction-StageDummyOkFunction-1XXW6BJ3Q6LWR"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    },
+                    {
+                        "name": "CleanupTestPoliciesAction",
+                        "actionTypeId": {
+                            "category": "Invoke",
+                            "owner": "AWS",
+                            "provider": "Lambda",
+                            "version": "1"
+                        },
+                        "runOrder": 4,
+                        "configuration": {
+                            "FunctionName": "StageDummyOkFunction-StageDummyOkFunction-1XXW6BJ3Q6LWR"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            }
+        ],
+        "version": 12
+    },
+    "metadata": {
+        "pipelineArn": "arn:aws:codepipeline:eu-central-1:297193019640:Develop-CodePipeline",
+        "created": 1537118180.633,
+        "updated": 1538314507.354
+    }
+}

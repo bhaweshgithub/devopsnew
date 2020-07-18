@@ -1,0 +1,26 @@
+#!/usr/bin/expect -f
+set alias [lindex $argv 1]
+set input [lindex $argv 0]
+set timeout -1
+
+spawn aws-nuke -c /aws-nuke/config.yaml --profile  $input
+
+#spawn /usr/local/bin/aws-nuke -c /root/golang/src/github.com/rebuy-de/github.com/config/config.yaml --profile  $input --no-dry-run
+#spawn /usr/local/bin/aws-nuke -c /root/golang/src/github.com/rebuy-de/aws-nuke/config/config.yaml --profile  $input --no-dry-run
+expect {
+
+"*Do you really want to nuke the account with the ID" { send -- $alias\r }
+
+exp_continue
+
+}
+expect {
+"*Do you really want to nuke these resources on the account with the ID" { send -- $alias\r }
+
+exp_continue
+
+}
+
+expect eof
+
+exit
